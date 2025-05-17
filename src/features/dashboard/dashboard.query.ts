@@ -1,0 +1,58 @@
+import { useQuery, useQueryClient, type UseQueryResult } from '@tanstack/react-query';
+import type { TEmployeeDependent } from './dashboard.types';
+import { getAllEmployees } from '../employees/employees.async';
+import { getAllDependents } from '../dependents/dependents.async';
+import type { TDependent } from '../dependents/dependents.types';
+import type { TEmployee } from '../employees/employees.types';
+import { mapEmployeesToDependents } from './dashboard.utils';
+
+// Create a custom query result type that uses our custom data type
+type TEmployeeDependentsQueryResult = Omit<
+	UseQueryResult<TEmployeeDependent[], unknown>,
+	'data'
+> & {
+	employeesWithDependents: TEmployeeDependent[] | undefined;
+};
+
+export const useGetAllEmployeesWithDependentsQuery =
+	(): TEmployeeDependentsQueryResult => {
+		const queryClient = useQueryClient();
+
+		const queryResult = useQuery({
+			queryKey: ['employeesWithDependents', 'employees', 'dependents'],
+			queryFn: async () => {
+				// Fetch employees and dependents in parallel
+				const [employees, dependents] = await Promise.all([
+					queryClient.fetchQuery({
+						queryKey: ['employees'],
+						queryFn: getAllEmployees,
+					}),
+					queryClient.fetchQuery({
+						queryKey: ['dependents'],
+						queryFn: getAllDependents,
+					}),
+				]);
+
+				// Return both datasets in a structured format
+				return {
+					employees,
+					dependents,
+				};
+			},
+			select: (data: { employees: TEmployee[]; dependents: TDependent[] }) => {
+				const { employees, dependents } = data;
+
+				// Transform the raw data into the format we want to display
+				return mapEmployeesToDependents(employees, dependents);
+			},
+			refetchOnWindowFocus: 'always',
+			staleTime: 1000 * 60 * 2, // Data considered stale after 2 minutes
+		});
+
+		const { data: employeesWithDependents, ...rest } = queryResult;
+
+		return {
+			employeesWithDependents,
+			...rest,
+		} as unknown as TEmployeeDependentsQueryResult;
+	};
