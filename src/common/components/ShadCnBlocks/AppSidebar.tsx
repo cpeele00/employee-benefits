@@ -1,19 +1,7 @@
 import * as React from 'react';
-import {
-	AudioWaveform,
-	BookOpen,
-	Bot,
-	Command,
-	Frame,
-	GalleryVerticalEnd,
-	Map,
-	PieChart,
-	Settings2,
-	SquareTerminal,
-} from 'lucide-react';
-
-import { NavMain } from '@/common/components/nav-main';
-import { NavUser } from '@/common/components/nav-user';
+import { BookOpen, Bot, Settings2, SquareTerminal } from 'lucide-react';
+import { NavMain } from '@/common/components/ShadCnBlocks/NavMain';
+import { NavUser } from '@/common/components/ShadCnBlocks/NavUser';
 import {
 	Sidebar,
 	SidebarContent,
@@ -55,7 +43,7 @@ const data = {
 	],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
 	return (
 		<Sidebar collapsible='icon' {...props}>
 			<SidebarHeader>
@@ -78,4 +66,4 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			<SidebarRail />
 		</Sidebar>
 	);
-}
+};

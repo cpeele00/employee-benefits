@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { AppSidebar } from '@/common/components/app-sidebar';
+import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { AppSidebar } from '@/common/components/ShadCnBlocks';
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -14,7 +14,6 @@ import {
 	SidebarProvider,
 	SidebarTrigger,
 } from '@/shadcn-components/ui/sidebar';
-import { Outlet } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_app')({
 	component: RouteComponent,

@@ -10,7 +10,7 @@ import {
 	SidebarMenuItem,
 } from '@/shadcn-components/ui/sidebar';
 
-export function NavMain({
+export const NavMain = ({
 	items,
 }: {
 	items: {
@@ -23,7 +23,7 @@ export function NavMain({
 			url: string;
 		}[];
 	}[];
-}) {
+}) => {
 	return (
 		<SidebarGroup>
 			<SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -53,4 +53,4 @@ export function NavMain({
 			</SidebarMenu>
 		</SidebarGroup>
 	);
-}
+};

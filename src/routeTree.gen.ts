@@ -15,6 +15,8 @@ import { Route as AppImport } from './routes/_app'
 import { Route as IndexImport } from './routes/index'
 import { Route as AppAppIndexImport } from './routes/_app/app/index'
 import { Route as AppAppEmployeesIndexImport } from './routes/_app/app/employees/index'
+import { Route as AppAppDependentsIndexImport } from './routes/_app/app/dependents/index'
+import { Route as AppAppBenefitsIndexImport } from './routes/_app/app/benefits/index'
 
 // Create/Update Routes
 
@@ -38,6 +40,18 @@ const AppAppIndexRoute = AppAppIndexImport.update({
 const AppAppEmployeesIndexRoute = AppAppEmployeesIndexImport.update({
   id: '/app/employees/',
   path: '/app/employees/',
+  getParentRoute: () => AppRoute,
+} as any)
+
+const AppAppDependentsIndexRoute = AppAppDependentsIndexImport.update({
+  id: '/app/dependents/',
+  path: '/app/dependents/',
+  getParentRoute: () => AppRoute,
+} as any)
+
+const AppAppBenefitsIndexRoute = AppAppBenefitsIndexImport.update({
+  id: '/app/benefits/',
+  path: '/app/benefits/',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -66,6 +80,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAppIndexImport
       parentRoute: typeof AppImport
     }
+    '/_app/app/benefits/': {
+      id: '/_app/app/benefits/'
+      path: '/app/benefits'
+      fullPath: '/app/benefits'
+      preLoaderRoute: typeof AppAppBenefitsIndexImport
+      parentRoute: typeof AppImport
+    }
+    '/_app/app/dependents/': {
+      id: '/_app/app/dependents/'
+      path: '/app/dependents'
+      fullPath: '/app/dependents'
+      preLoaderRoute: typeof AppAppDependentsIndexImport
+      parentRoute: typeof AppImport
+    }
     '/_app/app/employees/': {
       id: '/_app/app/employees/'
       path: '/app/employees'
@@ -80,11 +108,15 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppAppIndexRoute: typeof AppAppIndexRoute
+  AppAppBenefitsIndexRoute: typeof AppAppBenefitsIndexRoute
+  AppAppDependentsIndexRoute: typeof AppAppDependentsIndexRoute
   AppAppEmployeesIndexRoute: typeof AppAppEmployeesIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAppIndexRoute: AppAppIndexRoute,
+  AppAppBenefitsIndexRoute: AppAppBenefitsIndexRoute,
+  AppAppDependentsIndexRoute: AppAppDependentsIndexRoute,
   AppAppEmployeesIndexRoute: AppAppEmployeesIndexRoute,
 }
 
@@ -94,6 +126,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AppRouteWithChildren
   '/app': typeof AppAppIndexRoute
+  '/app/benefits': typeof AppAppBenefitsIndexRoute
+  '/app/dependents': typeof AppAppDependentsIndexRoute
   '/app/employees': typeof AppAppEmployeesIndexRoute
 }
 
@@ -101,6 +135,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AppRouteWithChildren
   '/app': typeof AppAppIndexRoute
+  '/app/benefits': typeof AppAppBenefitsIndexRoute
+  '/app/dependents': typeof AppAppDependentsIndexRoute
   '/app/employees': typeof AppAppEmployeesIndexRoute
 }
 
@@ -109,15 +145,30 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/_app/app/': typeof AppAppIndexRoute
+  '/_app/app/benefits/': typeof AppAppBenefitsIndexRoute
+  '/_app/app/dependents/': typeof AppAppDependentsIndexRoute
   '/_app/app/employees/': typeof AppAppEmployeesIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/app' | '/app/employees'
+  fullPaths:
+    | '/'
+    | ''
+    | '/app'
+    | '/app/benefits'
+    | '/app/dependents'
+    | '/app/employees'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/app' | '/app/employees'
-  id: '__root__' | '/' | '/_app' | '/_app/app/' | '/_app/app/employees/'
+  to: '/' | '' | '/app' | '/app/benefits' | '/app/dependents' | '/app/employees'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/_app/app/'
+    | '/_app/app/benefits/'
+    | '/_app/app/dependents/'
+    | '/_app/app/employees/'
   fileRoutesById: FileRoutesById
 }
 
@@ -152,11 +203,21 @@ export const routeTree = rootRoute
       "filePath": "_app.tsx",
       "children": [
         "/_app/app/",
+        "/_app/app/benefits/",
+        "/_app/app/dependents/",
         "/_app/app/employees/"
       ]
     },
     "/_app/app/": {
       "filePath": "_app/app/index.tsx",
+      "parent": "/_app"
+    },
+    "/_app/app/benefits/": {
+      "filePath": "_app/app/benefits/index.tsx",
+      "parent": "/_app"
+    },
+    "/_app/app/dependents/": {
+      "filePath": "_app/app/dependents/index.tsx",
       "parent": "/_app"
     },
     "/_app/app/employees/": {
