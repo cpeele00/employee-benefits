@@ -8,6 +8,7 @@ export const Route = createFileRoute('/')({
 function App() {
 	return (
 		<div className='text-center'>
+			<h1>Landing Page</h1>
 			<Button onClick={() => alert('Hello World')}>Hello World</Button>
 		</div>
 	);
