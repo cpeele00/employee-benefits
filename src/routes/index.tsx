@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { Button } from '@/shadcn-components/ui/button';
+import { Button } from '@/common/shadcn/ui/button';
 
 export const Route = createFileRoute('/')({
 	component: App,

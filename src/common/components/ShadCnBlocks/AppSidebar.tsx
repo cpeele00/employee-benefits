@@ -8,8 +8,8 @@ import {
 	SidebarFooter,
 	SidebarHeader,
 	SidebarRail,
-} from '@/shadcn-components/ui/sidebar';
-import { Avatar, AvatarFallback, AvatarImage } from '@/shadcn-components/ui/avatar';
+} from '@/common/shadcn/ui/sidebar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/common/shadcn/ui/avatar';
 
 // This is sample data.
 const data = {
@@ -42,6 +42,8 @@ const data = {
 		},
 	],
 };
+
+// NOTE: I did not write this component. It came with the Shadcn layout blocks.
 
 export const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
 	return (

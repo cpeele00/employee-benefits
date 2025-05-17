@@ -1,14 +1,16 @@
 import { type LucideIcon } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 
-import { Collapsible } from '@/shadcn-components/ui/collapsible';
+import { Collapsible } from '@/common/shadcn/ui/collapsible';
 import {
 	SidebarGroup,
 	SidebarGroupLabel,
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-} from '@/shadcn-components/ui/sidebar';
+} from '@/common/shadcn/ui/sidebar';
+
+// NOTE: I did not write this component. It came with the Shadcn layout blocks.
 
 export const NavMain = ({
 	items,

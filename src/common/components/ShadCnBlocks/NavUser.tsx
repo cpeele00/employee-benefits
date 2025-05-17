@@ -9,7 +9,7 @@ import {
 	Sparkles,
 } from 'lucide-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/shadcn-components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/common/shadcn/ui/avatar';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -18,13 +18,15 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@/shadcn-components/ui/dropdown-menu';
+} from '@/common/shadcn/ui/dropdown-menu';
 import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
 	useSidebar,
-} from '@/shadcn-components/ui/sidebar';
+} from '@/common/shadcn/ui/sidebar';
+
+// NOTE: I did not write this component. It came with the Shadcn layout blocks.
 
 export const NavUser = ({
 	user,

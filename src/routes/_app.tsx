@@ -7,13 +7,13 @@ import {
 	BreadcrumbList,
 	BreadcrumbPage,
 	BreadcrumbSeparator,
-} from '@/shadcn-components/ui/breadcrumb';
-import { Separator } from '@/shadcn-components/ui/separator';
+} from '@/common/shadcn/ui/breadcrumb';
+import { Separator } from '@/common/shadcn/ui/separator';
 import {
 	SidebarInset,
 	SidebarProvider,
 	SidebarTrigger,
-} from '@/shadcn-components/ui/sidebar';
+} from '@/common/shadcn/ui/sidebar';
 
 export const Route = createFileRoute('/_app')({
 	component: RouteComponent,
