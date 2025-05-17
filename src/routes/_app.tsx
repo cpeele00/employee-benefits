@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { createFileRoute, Outlet, useMatch, useMatches } from '@tanstack/react-router';
 import { AppSidebar } from '@/common/components/ShadCnBlocks';
 import {
 	Breadcrumb,
@@ -20,6 +20,12 @@ export const Route = createFileRoute('/_app')({
 });
 
 function RouteComponent() {
+	const matches = useMatches();
+	const pathname = matches[matches.length - 1]?.pathname;
+	const lastSegment = pathname?.split('/').filter(Boolean).pop() || '';
+	const currentPageName =
+		lastSegment === 'app' ? 'Dashboard' : lastSegment || 'Dashboard';
+
 	return (
 		<SidebarProvider>
 			<AppSidebar />
@@ -37,7 +43,9 @@ function RouteComponent() {
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className='hidden md:block' />
 								<BreadcrumbItem>
-									<BreadcrumbPage>Dashboard</BreadcrumbPage>
+									<BreadcrumbPage className='font-semibold capitalize'>
+										{currentPageName}
+									</BreadcrumbPage>
 								</BreadcrumbItem>
 							</BreadcrumbList>
 						</Breadcrumb>
