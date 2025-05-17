@@ -36,7 +36,7 @@ export const AvatarGroup: React.FC<IAvatarGroupProps> = ({ max = 4, children }) 
 					key={i}
 					className={clsx(
 						'transition-all duration-200 ease-in-out',
-						i !== 0 && '-ml-4 group-hover:ml-0'
+						i !== 0 && '-ml-4 group-hover:ml-0 group-hover:mr-1'
 					)}
 				>
 					{React.cloneElement(child as ReactElement)}

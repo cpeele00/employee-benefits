@@ -1,4 +1,5 @@
 import { Dashboard } from '@/features/dashboard/Dashboard';
+import { useGetAllEmployeesWithDependentsQuery } from '@/features/dashboard/dashboard.query';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_app/app/')({
@@ -6,9 +7,15 @@ export const Route = createFileRoute('/_app/app/')({
 });
 
 function DashboardRoute() {
+	const { employeesWithDependents, isLoading } =
+		useGetAllEmployeesWithDependentsQuery();
+
 	return (
 		<>
-			<Dashboard />
+			<Dashboard
+				employeesWithDependents={employeesWithDependents}
+				isLoading={isLoading}
+			/>
 		</>
 	);
 }
