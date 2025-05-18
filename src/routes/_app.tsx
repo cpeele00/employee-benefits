@@ -7,13 +7,9 @@ import {
 	BreadcrumbList,
 	BreadcrumbPage,
 	BreadcrumbSeparator,
-} from '@/common/shadcn/ui/breadcrumb';
-import { Separator } from '@/common/shadcn/ui/separator';
-import {
-	SidebarInset,
-	SidebarProvider,
-	SidebarTrigger,
-} from '@/common/shadcn/ui/sidebar';
+} from '@/shadcn/ui/breadcrumb';
+import { Separator } from '@/shadcn/ui/separator';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/shadcn/ui/sidebar';
 import { DarkModeToggle } from '@/common/components';
 
 export const Route = createFileRoute('/_app')({

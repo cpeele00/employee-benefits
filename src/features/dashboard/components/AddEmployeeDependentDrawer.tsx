@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@/common/shadcn/ui/button';
+import { Button } from '@/shadcn/ui/button';
 import {
 	Sheet,
 	SheetContent,
@@ -7,13 +7,13 @@ import {
 	SheetFooter,
 	SheetHeader,
 	SheetTitle,
-} from '@/common/shadcn/ui/sheet';
+} from '@/shadcn/ui/sheet';
 import type { TEmployee } from '../../employees/employees.types';
 
 interface IAddEmployeeDependentDrawerProps {
 	isOpen: boolean;
 	onClose: () => void;
-	employee?: TEmployee; // Optional - if provided, we're editing
+	employee: TEmployee | null;
 	onSubmit: (employee: TEmployee) => void;
 }
 
@@ -39,7 +39,7 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 					</SheetDescription>
 				</SheetHeader>
 				{/* Form will go here */}
-				<div className='py-4'>{/* Form fields */}</div>
+				<div className='py-4'></div>
 
 				<SheetFooter>
 					<div className='flex justify-end gap-2'>

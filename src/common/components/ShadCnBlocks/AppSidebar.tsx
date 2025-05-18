@@ -8,8 +8,8 @@ import {
 	SidebarFooter,
 	SidebarHeader,
 	SidebarRail,
-} from '@/common/shadcn/ui/sidebar';
-import { Avatar, AvatarFallback, AvatarImage } from '@/common/shadcn/ui/avatar';
+} from '@/shadcn/ui/sidebar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/shadcn/ui/avatar';
 
 // This is sample data.
 const data = {

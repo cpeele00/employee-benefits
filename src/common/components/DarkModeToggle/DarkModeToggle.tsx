@@ -1,5 +1,5 @@
 import { Moon, Sun } from 'lucide-react';
-import { Button } from '@/common/shadcn/ui/button';
+import { Button } from '@/shadcn/ui/button';
 import { useTheme } from '@/common/components/ThemeProvider';
 
 export const DarkModeToggle = () => {

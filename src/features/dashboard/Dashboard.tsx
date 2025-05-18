@@ -2,7 +2,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import type { TEmployeeDependent } from './dashboard.types';
 import { TitleCard } from '@/common/components';
-import { Button } from '@/common/shadcn/ui/button';
+import { Button } from '@/shadcn/ui/button';
 import {
 	FlexTable,
 	FlexTableHeader,
@@ -86,7 +86,7 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 			{createPortal(
 				<AddEmployeeDependentDrawer
 					isOpen={isAddEmployeeDrawerOpen}
-					employee={undefined}
+					employee={null}
 					onSubmit={(employee) => {
 						console.log('onSubmit', employee);
 					}}
