@@ -1,9 +1,9 @@
 import { useQuery, useQueryClient, type UseQueryResult } from '@tanstack/react-query';
-import type { TEmployeeDependent } from './dashboard.types';
-import { getAllEmployees } from '../employees/employees.async';
-import { getAllDependents } from '../dependents/dependents.async';
-import type { TDependent } from '../dependents/dependents.types';
-import type { TEmployee } from '../employees/employees.types';
+import type { TEmployeeDependent } from '@/common/types';
+import { getAllEmployeesAsync } from '../employees/employees.async';
+import { getAllDependentsAsync } from '../dependents/dependents.async';
+import type { TDependent } from '@/common/types';
+import type { TEmployee } from '@/common/types';
 import { mapEmployeesToDependents } from './dashboard.utils';
 
 // Create a custom query result type that uses our custom data type
@@ -25,11 +25,11 @@ export const useGetAllEmployeesWithDependentsQuery =
 				const [employees, dependents] = await Promise.all([
 					queryClient.fetchQuery({
 						queryKey: ['employees'],
-						queryFn: getAllEmployees,
+						queryFn: getAllEmployeesAsync,
 					}),
 					queryClient.fetchQuery({
 						queryKey: ['dependents'],
-						queryFn: getAllDependents,
+						queryFn: getAllDependentsAsync,
 					}),
 				]);
 

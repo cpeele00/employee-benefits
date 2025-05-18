@@ -29,6 +29,9 @@ export const getEmployeeAsync = async (id: string): Promise<TEmployee> => {
 };
 
 export const createEmployeeAsync = async (employee: TEmployee) => {
+	// simulate network latency
+	await new Promise((resolve) => setTimeout(resolve, 5000));
+
 	const res = await fetch(`${API_URL}/employees`, {
 		method: 'POST',
 		headers: {
@@ -45,6 +48,9 @@ export const createEmployeeAsync = async (employee: TEmployee) => {
 };
 
 export const updateEmployeeAsync = async (employee: TEmployee) => {
+	// simulate network latency
+	await new Promise((resolve) => setTimeout(resolve, 1000));
+
 	const res = await fetch(`${API_URL}/employees/${employee.id}`, {
 		method: 'PUT',
 		headers: {

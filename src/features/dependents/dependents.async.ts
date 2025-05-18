@@ -1,7 +1,7 @@
 import { API_URL } from '@/common/constants/app.constants';
-import type { TDependent } from './dependents.types';
+import type { TDependent } from '@/common/types';
 
-export const getAllDependents = async (): Promise<TDependent[]> => {
+export const getAllDependentsAsync = async (): Promise<TDependent[]> => {
 	// simulate network latency
 	await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -16,7 +16,7 @@ export const getAllDependents = async (): Promise<TDependent[]> => {
 	return dependents;
 };
 
-export const getDependent = async (id: string): Promise<TDependent> => {
+export const getDependentAsync = async (id: string): Promise<TDependent> => {
 	const res: Response = await fetch(`${API_URL}/dependents/${id}`);
 
 	if (!res.ok) {
@@ -28,7 +28,10 @@ export const getDependent = async (id: string): Promise<TDependent> => {
 	return dependent;
 };
 
-export const createDependent = async (dependent: TDependent) => {
+export const createDependentAsync = async (dependent: TDependent) => {
+	// simulate network latency
+	await new Promise((resolve) => setTimeout(resolve, 1000));
+
 	const res: Response = await fetch(`${API_URL}/dependents`, {
 		method: 'POST',
 		headers: {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import type { TEmployeeDependent } from '@/common/types';
+import type { TEmployee, TEmployeeDependent } from '@/common/types';
 import { TitleCard } from '@/common/components';
 import { Button } from '@/shadcn/ui/button';
 import {
@@ -17,13 +17,31 @@ import { AddEmployeeDependentDrawer } from './components/AddEmployeeDependentDra
 interface IDashboardProps {
 	employeesWithDependents: TEmployeeDependent[] | undefined;
 	isLoading: boolean;
+	isCreatingEmployee: boolean;
+	onCreateEmployee: (employee: TEmployee) => void;
+	isUpdatingEmployee: boolean;
+	onUpdateEmployee: (employee: TEmployee) => void;
 }
 
 export const Dashboard: React.FC<IDashboardProps> = ({
 	employeesWithDependents = [],
 	isLoading = false,
+	isCreatingEmployee = false,
+	onCreateEmployee,
+	isUpdatingEmployee = false,
+	onUpdateEmployee,
 }) => {
 	const [isAddEmployeeDrawerOpen, setIsAddEmployeeDrawerOpen] = React.useState(false);
+
+	const handleCreateSuccess = () => {
+		// Close the drawer
+		setIsAddEmployeeDrawerOpen(false);
+	};
+
+	const handleUpdateSuccess = () => {
+		// Close the drawer
+		setIsAddEmployeeDrawerOpen(false);
+	};
 
 	return (
 		<>
@@ -87,12 +105,22 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 				<AddEmployeeDependentDrawer
 					isOpen={isAddEmployeeDrawerOpen}
 					employee={null}
-					onSave={(employee) => {
-						console.log('onSave', employee);
+					isCreatingEmployee={isCreatingEmployee}
+					onSave={(employee: TEmployee) => {
+						if (employee.id) {
+							onUpdateEmployee(employee),
+								{
+									onSuccess: handleUpdateSuccess,
+								};
+						} else {
+							onCreateEmployee(employee),
+								{
+									onSuccess: handleCreateSuccess,
+								};
+						}
 					}}
 					onClose={() => {
 						setIsAddEmployeeDrawerOpen(false);
-						console.log('onClose');
 					}}
 				/>,
 				document.body

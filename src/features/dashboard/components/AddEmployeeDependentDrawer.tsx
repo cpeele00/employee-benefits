@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlusCircle, Trash2 } from 'lucide-react';
+import { Loader2, PlusCircle, Trash2 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shadcn/ui/button';
 import {
@@ -39,8 +39,9 @@ import {
 
 interface IAddEmployeeDependentDrawerProps {
 	isOpen: boolean;
-	onClose: () => void;
 	employee: TEmployee | null;
+	isCreatingEmployee: boolean;
+	onClose: () => void;
 	onSave: (employee: TEmployee) => void;
 }
 
@@ -51,8 +52,9 @@ const benefitOptions = benefitTypes.map((benefit: TBenefitType) => ({
 
 export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerProps> = ({
 	isOpen,
-	onClose,
 	employee,
+	isCreatingEmployee,
+	onClose,
 	onSave,
 }) => {
 	// Initialize the react-hook-form with zod validation
@@ -65,6 +67,7 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 			benefits: employee?.benefits || [],
 			dependents: employee?.dependents || [],
 		},
+		disabled: isCreatingEmployee,
 	});
 
 	// Setup field array for dependents
@@ -88,20 +91,17 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 		remove(index);
 	};
 
-	const onSubmit = async (data: TEmployeeFormValues) => {
-		try {
-			const employeeToSave: TEmployee = {
-				id: data.id || '',
-				firstName: data.firstName,
-				lastName: data.lastName,
-				benefits: data.benefits,
-				dependents: data.dependents,
-			};
+	// Handle form submission
+	const onSubmit = (data: TEmployeeFormValues) => {
+		const employeeToSave: TEmployee = {
+			id: data.id || '',
+			firstName: data.firstName,
+			lastName: data.lastName,
+			benefits: data.benefits,
+			dependents: data.dependents,
+		};
 
-			onSave(employeeToSave);
-		} catch (error: unknown) {
-			console.error(error);
-		}
+		onSave(employeeToSave);
 	};
 
 	const isEditing = !!employee;
@@ -188,6 +188,7 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 										size={'sm'}
 										type='button'
 										onClick={handleAddDependent}
+										disabled={isCreatingEmployee}
 										className='flex items-center gap-1'
 									>
 										Add Dependent
@@ -308,7 +309,9 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 													type='button'
 													variant='ghost'
 													size='sm'
-													onClick={() => remove(index)}
+													onClick={() =>
+														handleRemoveDependent(index)
+													}
 													className='ml-auto flex items-center text-violet-600'
 												>
 													Remove Dependent
@@ -335,8 +338,15 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 						>
 							Cancel
 						</Button>
-						<Button type='submit' onClick={form.handleSubmit(onSubmit)}>
+						<Button
+							type='submit'
+							onClick={form.handleSubmit(onSubmit)}
+							disabled={isCreatingEmployee}
+						>
 							Save
+							{isCreatingEmployee ? (
+								<Loader2 className='animate-spin' />
+							) : null}
 						</Button>
 					</div>
 				</SheetFooter>

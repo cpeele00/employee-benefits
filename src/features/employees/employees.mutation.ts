@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { TEmployee } from '@/common/types';
 import { createEmployeeAsync, updateEmployeeAsync } from './employees.async';
 
-export const useCreateEmployeeMutation = () => {
+export const useCreateEmployee = () => {
 	const queryClient = useQueryClient();
 
 	const mutationResult = useMutation({
@@ -21,7 +21,7 @@ export const useCreateEmployeeMutation = () => {
 	return { createEmployee, ...rest };
 };
 
-export const useUpdateEmployeeMutation = () => {
+export const useUpdateEmployee = () => {
 	const queryClient = useQueryClient();
 
 	const mutationResult = useMutation({
