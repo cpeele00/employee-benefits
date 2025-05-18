@@ -1,7 +1,7 @@
 import { API_URL } from '@/common/constants/app.constants';
-import type { TEmployee } from './employees.types';
+import type { TEmployee } from '@/common/types';
 
-export const getAllEmployees = async (): Promise<TEmployee[]> => {
+export const getAllEmployeesAsync = async (): Promise<TEmployee[]> => {
 	// simulate network latency
 	await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -16,7 +16,7 @@ export const getAllEmployees = async (): Promise<TEmployee[]> => {
 	return employees;
 };
 
-export const getEmployee = async (id: string): Promise<TEmployee> => {
+export const getEmployeeAsync = async (id: string): Promise<TEmployee> => {
 	const res: Response = await fetch(`${API_URL}/employees/${id}`);
 
 	if (!res.ok) {
@@ -28,9 +28,25 @@ export const getEmployee = async (id: string): Promise<TEmployee> => {
 	return employee;
 };
 
-export const createEmployee = async (employee: TEmployee) => {
+export const createEmployeeAsync = async (employee: TEmployee) => {
 	const res = await fetch(`${API_URL}/employees`, {
 		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(employee),
+	});
+
+	if (!res.ok) {
+		throw new Error('Network response was not ok');
+	}
+
+	return res.json() as Promise<TEmployee>;
+};
+
+export const updateEmployeeAsync = async (employee: TEmployee) => {
+	const res = await fetch(`${API_URL}/employees/${employee.id}`, {
+		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json',
 		},
