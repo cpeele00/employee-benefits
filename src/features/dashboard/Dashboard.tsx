@@ -87,8 +87,8 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 				<AddEmployeeDependentDrawer
 					isOpen={isAddEmployeeDrawerOpen}
 					employee={null}
-					onSubmit={(employee) => {
-						console.log('onSubmit', employee);
+					onSave={(employee) => {
+						console.log('onSave', employee);
 					}}
 					onClose={() => {
 						setIsAddEmployeeDrawerOpen(false);
