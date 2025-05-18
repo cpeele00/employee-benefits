@@ -1,6 +1,6 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import type { TEmployeeDependent } from './dashboard.types';
+import type { TEmployeeDependent } from '@/common/types';
 import { TitleCard } from '@/common/components';
 import { Button } from '@/shadcn/ui/button';
 import {
@@ -64,7 +64,7 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 							</FlexTableCell>
 							<FlexTableCell column='dependents'>
 								<AvatarGroup max={3}>
-									{item.dependents.map((dependent) => (
+									{(item.dependents || []).map((dependent) => (
 										<Avatar
 											key={dependent.id}
 											name={`${dependent.firstName} ${dependent.lastName}`}

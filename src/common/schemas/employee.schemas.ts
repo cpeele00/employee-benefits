@@ -18,6 +18,7 @@ export const benefitsArraySchema = z
 	.refine(noDuplicateBenefits, { message: 'Cannot select the same benefit twice.' });
 
 export const dependentSchema = z.object({
+	id: z.string().optional(),
 	firstName: z.string().min(1, { message: 'First name is required' }),
 	lastName: z.string().min(1, { message: 'Last name is required.' }),
 	relationship: z.enum(['Spouse', 'Child'], {
@@ -27,6 +28,7 @@ export const dependentSchema = z.object({
 });
 
 export const employeeFormSchema = z.object({
+	id: z.string().optional(),
 	firstName: z.string().min(1, { message: 'First name is required.' }),
 	lastName: z.string().min(1, { message: 'Last name is required.' }),
 	benefits: benefitsArraySchema,
