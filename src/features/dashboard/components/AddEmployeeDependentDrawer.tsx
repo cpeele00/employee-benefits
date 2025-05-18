@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divide, PlusCircle } from 'lucide-react';
+import { Divide, PlusCircle, Trash2 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shadcn/ui/button';
 import {
@@ -196,8 +196,11 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 								) : (
 									<div className='space-y-4'>
 										{fields.map((field, index) => (
-											<div key={field.id}>
-												<div>
+											<div
+												key={field.id}
+												className='rounded-md border border-dashed p-3'
+											>
+												<div className='grid grid-cols-2 gap-3'>
 													<FormField
 														control={form.control}
 														name={`dependents.${index}.firstName`}
@@ -215,6 +218,35 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 															</FormItem>
 														)}
 													/>
+
+													<FormField
+														control={form.control}
+														name={`dependents.${index}.lastName`}
+														render={({ field }) => (
+															<FormItem>
+																<FormLabel>
+																	Last Name
+																</FormLabel>
+																<FormControl>
+																	<Input
+																		placeholder='Last name'
+																		{...field}
+																	/>
+																</FormControl>
+															</FormItem>
+														)}
+													/>
+
+													<Button
+														type='button'
+														variant='ghost'
+														size='sm'
+														onClick={() => remove(index)}
+														className='ml-auto flex items-center'
+													>
+														Remove Dependent
+														<Trash2 className='h-4 w-4 mr-1' />
+													</Button>
 												</div>
 											</div>
 										))}
@@ -227,7 +259,14 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 
 				<SheetFooter>
 					<div className='flex justify-end gap-2'>
-						<Button variant='outline' onClick={onClose}>
+						<Button
+							variant='outline'
+							onClick={() => {
+								form.reset();
+
+								if (onClose) onClose();
+							}}
+						>
 							Cancel
 						</Button>
 						<Button type='submit' onClick={form.handleSubmit(onSubmit)}>
