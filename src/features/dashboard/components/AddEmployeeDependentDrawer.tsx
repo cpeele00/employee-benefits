@@ -29,6 +29,13 @@ import {
 } from '@/shadcn/ui/form';
 import { Input } from '@/shadcn/ui/input';
 import { Label } from '@/shadcn/ui/label';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/shadcn/ui/select';
 
 interface IAddEmployeeDependentDrawerProps {
 	isOpen: boolean;
@@ -113,7 +120,7 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 					</SheetDescription>
 				</SheetHeader>
 				{/* Form will go here */}
-				<section className='p-4'>
+				<section className='p-4 overflow-y-auto'>
 					<Form {...form}>
 						<form
 							onSubmit={form.handleSubmit(onSubmit)}
@@ -198,7 +205,7 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 										{fields.map((field, index) => (
 											<div
 												key={field.id}
-												className='rounded-md border border-dashed p-3'
+												className='rounded-md border border-dashed p-4 space-y-4'
 											>
 												<div className='grid grid-cols-2 gap-3'>
 													<FormField
@@ -236,18 +243,77 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 															</FormItem>
 														)}
 													/>
-
-													<Button
-														type='button'
-														variant='ghost'
-														size='sm'
-														onClick={() => remove(index)}
-														className='ml-auto flex items-center'
-													>
-														Remove Dependent
-														<Trash2 className='h-4 w-4 mr-1' />
-													</Button>
 												</div>
+
+												<FormField
+													control={form.control}
+													name={`dependents.${index}.relationship`}
+													render={({ field }) => (
+														<FormItem className='w-full'>
+															<FormLabel>
+																Relationship
+															</FormLabel>
+															<Select
+																onValueChange={
+																	field.onChange
+																}
+																defaultValue={field.value}
+																disabled={false}
+															>
+																<FormControl>
+																	<SelectTrigger className='w-full'>
+																		<SelectValue placeholder='Select relationship' />
+																	</SelectTrigger>
+																</FormControl>
+																<SelectContent>
+																	<SelectItem value='Spouse'>
+																		Spouse
+																	</SelectItem>
+																	<SelectItem value='Child'>
+																		Child
+																	</SelectItem>
+																</SelectContent>
+															</Select>
+														</FormItem>
+													)}
+												/>
+
+												<FormField
+													control={form.control}
+													name={`dependents.${index}.benefits`}
+													render={({ field }) => (
+														<FormItem className='w-full'>
+															<FormLabel>
+																Benefits
+															</FormLabel>
+															<FormControl>
+																<MultiSelect
+																	options={
+																		benefitOptions
+																	}
+																	selected={field.value}
+																	onChange={
+																		field.onChange
+																	}
+																	placeholder='Select benefits'
+																	emptyMessage='No benefits found.'
+																/>
+															</FormControl>
+															<FormMessage />
+														</FormItem>
+													)}
+												/>
+
+												<Button
+													type='button'
+													variant='ghost'
+													size='sm'
+													onClick={() => remove(index)}
+													className='ml-auto flex items-center text-violet-600'
+												>
+													Remove Dependent
+													<Trash2 className='h-4 w-4 mr-1' />
+												</Button>
 											</div>
 										))}
 									</div>
