@@ -1,5 +1,9 @@
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 export default function LayoutAddition() {
-  return <ReactQueryDevtools buttonPosition="bottom-right" />
+	return (
+		<div className='left-0' style={{ position: 'relative', top: '-50px' }}>
+			<ReactQueryDevtools buttonPosition='bottom-left' />
+		</div>
+	);
 }

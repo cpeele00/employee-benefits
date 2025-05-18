@@ -1,10 +1,11 @@
+import { API_URL } from '@/common/constants/app.constants';
 import type { TDependent } from './dependents.types';
 
 export const getAllDependents = async (): Promise<TDependent[]> => {
 	// simulate network latency
 	await new Promise((resolve) => setTimeout(resolve, 1000));
 
-	const res: Response = await fetch('http://localhost:3000/dependents');
+	const res: Response = await fetch(`${API_URL}/dependents`);
 
 	if (!res.ok) {
 		throw new Error('Network response was not ok');
@@ -16,7 +17,7 @@ export const getAllDependents = async (): Promise<TDependent[]> => {
 };
 
 export const getDependent = async (id: string): Promise<TDependent> => {
-	const res: Response = await fetch(`http://localhost:3000/dependents/${id}`);
+	const res: Response = await fetch(`${API_URL}/dependents/${id}`);
 
 	if (!res.ok) {
 		throw new Error('Network response was not ok');
@@ -28,7 +29,7 @@ export const getDependent = async (id: string): Promise<TDependent> => {
 };
 
 export const createDependent = async (dependent: TDependent) => {
-	const res: Response = await fetch('http://localhost:3000/dependents', {
+	const res: Response = await fetch(`${API_URL}/dependents`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
