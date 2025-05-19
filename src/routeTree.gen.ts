@@ -17,6 +17,7 @@ import { Route as AppAppIndexImport } from './routes/_app/app/index'
 import { Route as AppAppEmployeesIndexImport } from './routes/_app/app/employees/index'
 import { Route as AppAppDependentsIndexImport } from './routes/_app/app/dependents/index'
 import { Route as AppAppBenefitsIndexImport } from './routes/_app/app/benefits/index'
+import { Route as AppAppEmployeesEmployeeIdImport } from './routes/_app/app/employees/$employeeId'
 
 // Create/Update Routes
 
@@ -55,6 +56,12 @@ const AppAppBenefitsIndexRoute = AppAppBenefitsIndexImport.update({
   getParentRoute: () => AppRoute,
 } as any)
 
+const AppAppEmployeesEmployeeIdRoute = AppAppEmployeesEmployeeIdImport.update({
+  id: '/app/employees/$employeeId',
+  path: '/app/employees/$employeeId',
+  getParentRoute: () => AppRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -78,6 +85,13 @@ declare module '@tanstack/react-router' {
       path: '/app'
       fullPath: '/app'
       preLoaderRoute: typeof AppAppIndexImport
+      parentRoute: typeof AppImport
+    }
+    '/_app/app/employees/$employeeId': {
+      id: '/_app/app/employees/$employeeId'
+      path: '/app/employees/$employeeId'
+      fullPath: '/app/employees/$employeeId'
+      preLoaderRoute: typeof AppAppEmployeesEmployeeIdImport
       parentRoute: typeof AppImport
     }
     '/_app/app/benefits/': {
@@ -108,6 +122,7 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppAppIndexRoute: typeof AppAppIndexRoute
+  AppAppEmployeesEmployeeIdRoute: typeof AppAppEmployeesEmployeeIdRoute
   AppAppBenefitsIndexRoute: typeof AppAppBenefitsIndexRoute
   AppAppDependentsIndexRoute: typeof AppAppDependentsIndexRoute
   AppAppEmployeesIndexRoute: typeof AppAppEmployeesIndexRoute
@@ -115,6 +130,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAppIndexRoute: AppAppIndexRoute,
+  AppAppEmployeesEmployeeIdRoute: AppAppEmployeesEmployeeIdRoute,
   AppAppBenefitsIndexRoute: AppAppBenefitsIndexRoute,
   AppAppDependentsIndexRoute: AppAppDependentsIndexRoute,
   AppAppEmployeesIndexRoute: AppAppEmployeesIndexRoute,
@@ -126,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AppRouteWithChildren
   '/app': typeof AppAppIndexRoute
+  '/app/employees/$employeeId': typeof AppAppEmployeesEmployeeIdRoute
   '/app/benefits': typeof AppAppBenefitsIndexRoute
   '/app/dependents': typeof AppAppDependentsIndexRoute
   '/app/employees': typeof AppAppEmployeesIndexRoute
@@ -135,6 +152,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AppRouteWithChildren
   '/app': typeof AppAppIndexRoute
+  '/app/employees/$employeeId': typeof AppAppEmployeesEmployeeIdRoute
   '/app/benefits': typeof AppAppBenefitsIndexRoute
   '/app/dependents': typeof AppAppDependentsIndexRoute
   '/app/employees': typeof AppAppEmployeesIndexRoute
@@ -145,6 +163,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/_app/app/': typeof AppAppIndexRoute
+  '/_app/app/employees/$employeeId': typeof AppAppEmployeesEmployeeIdRoute
   '/_app/app/benefits/': typeof AppAppBenefitsIndexRoute
   '/_app/app/dependents/': typeof AppAppDependentsIndexRoute
   '/_app/app/employees/': typeof AppAppEmployeesIndexRoute
@@ -156,16 +175,25 @@ export interface FileRouteTypes {
     | '/'
     | ''
     | '/app'
+    | '/app/employees/$employeeId'
     | '/app/benefits'
     | '/app/dependents'
     | '/app/employees'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/app' | '/app/benefits' | '/app/dependents' | '/app/employees'
+  to:
+    | '/'
+    | ''
+    | '/app'
+    | '/app/employees/$employeeId'
+    | '/app/benefits'
+    | '/app/dependents'
+    | '/app/employees'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/_app/app/'
+    | '/_app/app/employees/$employeeId'
     | '/_app/app/benefits/'
     | '/_app/app/dependents/'
     | '/_app/app/employees/'
@@ -203,6 +231,7 @@ export const routeTree = rootRoute
       "filePath": "_app.tsx",
       "children": [
         "/_app/app/",
+        "/_app/app/employees/$employeeId",
         "/_app/app/benefits/",
         "/_app/app/dependents/",
         "/_app/app/employees/"
@@ -210,6 +239,10 @@ export const routeTree = rootRoute
     },
     "/_app/app/": {
       "filePath": "_app/app/index.tsx",
+      "parent": "/_app"
+    },
+    "/_app/app/employees/$employeeId": {
+      "filePath": "_app/app/employees/$employeeId.tsx",
       "parent": "/_app"
     },
     "/_app/app/benefits/": {

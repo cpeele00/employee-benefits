@@ -1,6 +1,6 @@
-import { TitleCard } from '../../common/components';
+import { TitleCard } from '@/common/components';
 import { EmployeeTable } from './EmployeeTable';
-import type { TEmployee } from './employees.types';
+import type { TEmployee } from '@/common/types';
 
 interface IEmployeesProps {
 	employees: TEmployee[] | undefined;

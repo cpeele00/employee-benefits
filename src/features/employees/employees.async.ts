@@ -16,7 +16,7 @@ export const getAllEmployeesAsync = async (): Promise<TEmployee[]> => {
 	return employees;
 };
 
-export const getEmployeeAsync = async (id: string): Promise<TEmployee> => {
+export const getEmployeeByIdAsync = async (id: string): Promise<TEmployee> => {
 	const res: Response = await fetch(`${API_URL}/employees/${id}`);
 
 	if (!res.ok) {

@@ -15,6 +15,7 @@ import { Avatar, AvatarGroup } from '@/common/components';
 import { AddEmployeeDependentDrawer } from './components/AddEmployeeDependentDrawer';
 import { Divide, Pencil, Trash2 } from 'lucide-react';
 import { CircularProgress } from '@/common/components/CircularProgress/CircularProgress';
+import { Link } from '@tanstack/react-router';
 
 interface IDashboardProps {
 	employeesWithDependents: TEmployeeDependent[] | undefined;
@@ -95,7 +96,13 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 						{employeesWithDependents.map((item) => (
 							<FlexTableRow key={item.employee.id}>
 								<FlexTableCell column='employee'>
-									{item.employee.firstName} {item.employee.lastName}
+									<Link
+										to={`/app/employees/$employeeId`}
+										params={{ employeeId: item.employee.id || '' }}
+										className='font-medium text-cyan-600 hover:underline dark:text-cyan-500'
+									>
+										{item.employee.firstName} {item.employee.lastName}
+									</Link>
 								</FlexTableCell>
 								<FlexTableCell column='dependents'>
 									<AvatarGroup max={3}>
