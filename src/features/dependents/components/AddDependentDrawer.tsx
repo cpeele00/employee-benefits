@@ -1,0 +1,219 @@
+import React from 'react';
+import { Loader2 } from 'lucide-react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@/shadcn/ui/button';
+import {
+	Sheet,
+	SheetContent,
+	SheetDescription,
+	SheetFooter,
+	SheetHeader,
+	SheetTitle,
+} from '@/shadcn/ui/sheet';
+import type { TDependent } from '@/common/types';
+import { useForm } from 'react-hook-form';
+import {
+	benefitTypes,
+	dependentFormSchema,
+	type TDependentFormValues,
+} from '@/common/schemas/employee.schemas';
+import type { TBenefitType } from '@/common/types';
+import { MultiSelect } from '@/shadcn/ui/multi-select';
+import {
+	Form,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormControl,
+	FormMessage,
+} from '@/shadcn/ui/form';
+import { Input } from '@/shadcn/ui/input';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/shadcn/ui/select';
+
+interface IAddDependentDrawerProps {
+	isOpen: boolean;
+	employeeId: string;
+	dependent?: TDependent;
+	isCreatingDependent: boolean;
+	onClose: () => void;
+	onSave: (dependent: TDependent) => void;
+}
+
+const benefitOptions = benefitTypes.map((benefit: TBenefitType) => ({
+	label: benefit,
+	value: benefit,
+}));
+
+export const AddDependentDrawer: React.FC<IAddDependentDrawerProps> = ({
+	isOpen,
+	employeeId,
+	dependent,
+	isCreatingDependent,
+	onClose,
+	onSave,
+}) => {
+	const form = useForm<TDependentFormValues>({
+		resolver: zodResolver(dependentFormSchema),
+		defaultValues: {
+			id: dependent?.id || '',
+			firstName: dependent?.firstName || '',
+			lastName: dependent?.lastName || '',
+			relationship: dependent?.relationship || 'Spouse',
+			benefits: dependent?.benefits || [],
+		},
+		disabled: isCreatingDependent,
+	});
+
+	const onSubmit = (data: TDependentFormValues) => {
+		const dependentToSave: TDependent = {
+			id: data.id || '',
+			employeeId,
+			firstName: data.firstName,
+			lastName: data.lastName,
+			relationship: data.relationship,
+			benefits: data.benefits,
+		};
+
+		onSave(dependentToSave);
+	};
+
+	const isEditing = !!dependent;
+
+	return (
+		<Sheet open={isOpen} onOpenChange={onClose}>
+			<SheetContent className='sm:max-w-md'>
+				<SheetHeader>
+					<SheetTitle>
+						{isEditing ? 'Edit Dependent' : 'Add Dependent'}
+					</SheetTitle>
+					<SheetDescription>
+						{isEditing
+							? 'Update dependent information in the form below.'
+							: 'Fill out the form below to add a new dependent.'}
+					</SheetDescription>
+				</SheetHeader>
+				<section className='p-4 overflow-y-auto'>
+					<Form {...form}>
+						<form
+							onSubmit={form.handleSubmit(onSubmit)}
+							className='space-y-6'
+						>
+							<div className='grid grid-cols-2 gap-3'>
+								<FormField
+									control={form.control}
+									name={`firstName`}
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>First Name</FormLabel>
+											<FormControl>
+												<Input
+													placeholder='First name'
+													{...field}
+												/>
+											</FormControl>
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name={`lastName`}
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Last Name</FormLabel>
+											<FormControl>
+												<Input
+													placeholder='Last name'
+													{...field}
+												/>
+											</FormControl>
+										</FormItem>
+									)}
+								/>
+							</div>
+
+							<FormField
+								control={form.control}
+								name={`relationship`}
+								render={({ field }) => (
+									<FormItem className='w-full'>
+										<FormLabel>Relationship</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+											disabled={false}
+										>
+											<FormControl>
+												<SelectTrigger className='w-full'>
+													<SelectValue placeholder='Select relationship' />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												<SelectItem value='Spouse'>
+													Spouse
+												</SelectItem>
+												<SelectItem value='Child'>
+													Child
+												</SelectItem>
+											</SelectContent>
+										</Select>
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name={`benefits`}
+								render={({ field }) => (
+									<FormItem className='w-full'>
+										<FormLabel>Benefits</FormLabel>
+										<FormControl>
+											<MultiSelect
+												options={benefitOptions}
+												selected={field.value}
+												onChange={field.onChange}
+												placeholder='Select benefits'
+												emptyMessage='No benefits found.'
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</form>
+					</Form>
+				</section>
+				<SheetFooter>
+					<div className='flex justify-end gap-2'>
+						<Button
+							variant='outline'
+							onClick={() => {
+								form.reset();
+
+								if (onClose) onClose();
+							}}
+						>
+							Cancel
+						</Button>
+						<Button
+							type='submit'
+							onClick={form.handleSubmit(onSubmit)}
+							disabled={isCreatingDependent}
+						>
+							Save
+							{isCreatingDependent ? (
+								<Loader2 className='animate-spin' />
+							) : null}
+						</Button>
+					</div>
+				</SheetFooter>
+			</SheetContent>
+		</Sheet>
+	);
+};

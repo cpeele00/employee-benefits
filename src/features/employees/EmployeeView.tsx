@@ -1,4 +1,4 @@
-import type React from 'react';
+import React, { useState } from 'react';
 import type { TDependent, TEmployee } from '@/common/types';
 import { Avatar } from '@/common/components';
 import { Button } from '@/shadcn/ui/button';
@@ -19,6 +19,8 @@ import {
 	FlexTableRow,
 } from '@/common/components/FlexTable/FlexTable';
 import { CircularProgress } from '@/common/components/CircularProgress/CircularProgress';
+import { createPortal } from 'react-dom';
+import { AddDependentDrawer } from '../dependents/components/AddDependentDrawer';
 
 interface IEmployeeViewProps {
 	employee: TEmployee | undefined;
@@ -26,8 +28,10 @@ interface IEmployeeViewProps {
 	isEmployeeLoading: boolean;
 	areDependentsLoading: boolean;
 	isRefetching: boolean;
+	isCreatingDependent: boolean;
 	isDeletingDependent: boolean;
 	onDeleteDependent: (id: string) => Promise<boolean>;
+	onCreateDependent: (dependent: TDependent) => Promise<TDependent>;
 }
 
 export const EmployeeView: React.FC<IEmployeeViewProps> = ({
@@ -37,12 +41,27 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 	areDependentsLoading,
 	isRefetching,
 	isDeletingDependent,
+	isCreatingDependent,
+	onCreateDependent,
 	onDeleteDependent,
 }) => {
+	const [isAddDependentDrawerOpen, setIsAddDependentDrawerOpen] =
+		useState<boolean>(false);
+
 	const isPending = isRefetching || isDeletingDependent;
 
+	const handleCreateSuccess = () => {
+		// Close the drawer
+		setIsAddDependentDrawerOpen(false);
+	};
+
+	const handleUpdateSuccess = () => {
+		// Close the drawer
+		setIsAddDependentDrawerOpen(false);
+	};
+
 	return (
-		<div>
+		<>
 			<section className='flex justify-between items-center mb-4'>
 				<div className='flex items-center gap-4'>
 					<Avatar
@@ -90,7 +109,12 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 			<section>
 				<div className='flex justify-between items-center w-full mb-2 mt-12'>
 					{isPending ? <CircularProgress /> : <div></div>}
-					<Button className='flex items-center gap-1'>
+					<Button
+						className='flex items-center gap-1'
+						onClick={() => {
+							setIsAddDependentDrawerOpen(true);
+						}}
+					>
 						<Plus />
 						Add Dependent
 					</Button>
@@ -152,6 +176,25 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 					</FlexTableBody>
 				</FlexTable>
 			</section>
-		</div>
+
+			{createPortal(
+				<AddDependentDrawer
+					isOpen={isAddDependentDrawerOpen && !!employee}
+					employeeId={employee?.id ?? ''}
+					isCreatingDependent={false}
+					onClose={() => {
+						setIsAddDependentDrawerOpen(false);
+					}}
+					onSave={(dependent: TDependent) => {
+						onCreateDependent(dependent)
+							.then()
+							.catch((err: unknown) => {
+								console.error(err);
+							});
+					}}
+				/>,
+				document.body
+			)}
+		</>
 	);
 };

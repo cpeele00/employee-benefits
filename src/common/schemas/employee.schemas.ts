@@ -17,9 +17,9 @@ export const benefitsArraySchema = z
 	.min(1, { message: 'At least one benefit is required.' })
 	.refine(noDuplicateBenefits, { message: 'Cannot select the same benefit twice.' });
 
-export const dependentSchema = z.object({
+export const dependentFormSchema = z.object({
 	id: z.string().optional(),
-	firstName: z.string().min(1, { message: 'First name is required' }),
+	firstName: z.string().min(1, { message: 'First name is required.' }),
 	lastName: z.string().min(1, { message: 'Last name is required.' }),
 	relationship: z.enum(['Spouse', 'Child'], {
 		required_error: 'Please select a relationship.',
@@ -32,8 +32,8 @@ export const employeeFormSchema = z.object({
 	firstName: z.string().min(1, { message: 'First name is required.' }),
 	lastName: z.string().min(1, { message: 'Last name is required.' }),
 	benefits: benefitsArraySchema,
-	dependents: z.array(dependentSchema),
+	dependents: z.array(dependentFormSchema),
 });
 
-export type TDependentFormValues = z.infer<typeof dependentSchema>;
+export type TDependentFormValues = z.infer<typeof dependentFormSchema>;
 export type TEmployeeFormValues = z.infer<typeof employeeFormSchema>;

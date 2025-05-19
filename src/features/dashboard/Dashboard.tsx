@@ -160,9 +160,11 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 					employee={null}
 					isCreatingEmployee={isCreatingEmployee}
 					onSave={(employee: TEmployee) => {
-						onCreateEmployee(employee)
-							.then(handleCreateSuccess)
-							.catch((err) => {
+						return onCreateEmployee(employee)
+							.then(() => {
+								setIsAddEmployeeDrawerOpen(false);
+							})
+							.catch((err: unknown) => {
 								console.error(err);
 							});
 					}}

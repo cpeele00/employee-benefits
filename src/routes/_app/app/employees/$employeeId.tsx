@@ -2,7 +2,10 @@ import { createFileRoute, useMatch } from '@tanstack/react-router';
 import { EmployeeView } from '@/features/employees/EmployeeView';
 import { useGetEmployeeByIdQuery } from '@/features/employees/employees.query';
 import { useGetAllDependentsByEmployeeIdQuery } from '@/features/dependents/dependents.query';
-import { useDeleteDependent } from '@/features/dependents/depedents.mutation';
+import {
+	useCreateDepedent,
+	useDeleteDependent,
+} from '@/features/dependents/dependents.mutation';
 
 export const Route = createFileRoute('/_app/app/employees/$employeeId')({
 	component: EmployeeViewRoute,
@@ -22,6 +25,7 @@ function EmployeeViewRoute() {
 		employeeId,
 	});
 
+	const { createDependent, isPending: isCreatingDependent } = useCreateDepedent();
 	const { deleteDependent, isPending: isDeletingDependent } = useDeleteDependent();
 
 	return (
@@ -32,6 +36,8 @@ function EmployeeViewRoute() {
 				isRefetching={isRefetching}
 				isEmployeeLoading={isEmployeeLoading}
 				areDependentsLoading={areDependentsLoading}
+				onCreateDependent={createDependent}
+				isCreatingDependent={isCreatingDependent}
 				onDeleteDependent={deleteDependent}
 				isDeletingDependent={isDeletingDependent}
 			/>

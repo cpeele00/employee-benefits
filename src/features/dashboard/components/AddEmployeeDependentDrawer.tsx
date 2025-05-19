@@ -42,7 +42,8 @@ interface IAddEmployeeDependentDrawerProps {
 	employee: TEmployee | null;
 	isCreatingEmployee: boolean;
 	onClose: () => void;
-	onSave: (employee: TEmployee) => void;
+	onSave: (employee: TEmployee) => Promise<void>;
+	onSaveSuccess?: () => void;
 }
 
 const benefitOptions = benefitTypes.map((benefit: TBenefitType) => ({
@@ -56,6 +57,7 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 	isCreatingEmployee,
 	onClose,
 	onSave,
+	onSaveSuccess,
 }) => {
 	// Initialize the react-hook-form with zod validation
 	const form = useForm<TEmployeeFormValues>({
@@ -101,7 +103,15 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 			dependents: data.dependents,
 		};
 
-		onSave(employeeToSave);
+		onSave(employeeToSave)
+			.then(() => {
+				form.reset();
+				if (onSaveSuccess) onSaveSuccess();
+				else onClose();
+			})
+			.catch((err) => {
+				console.error('Failed to save employee:', err);
+			});
 	};
 
 	const isEditing = !!employee;
@@ -119,7 +129,6 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 							: 'Fill out the form below to add a new employee.'}
 					</SheetDescription>
 				</SheetHeader>
-				{/* Form will go here */}
 				<section className='p-4 overflow-y-auto'>
 					<Form {...form}>
 						<form
