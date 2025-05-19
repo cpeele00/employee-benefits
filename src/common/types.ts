@@ -1,5 +1,5 @@
-export type TBenefitType = 'Medical' | 'Dental' | 'Vision' | 'Life';
-export type TRelationShipType = 'Spouse' | 'Child';
+export type TBenefitType = 'medical' | 'dental' | 'vision' | 'life';
+export type TRelationShipType = 'spouse' | 'child';
 
 export type TEmployee = {
 	id?: string;

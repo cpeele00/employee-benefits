@@ -5,6 +5,7 @@ import { useGetAllDependentsByEmployeeIdQuery } from '@/features/dependents/depe
 import {
 	useCreateDepedent,
 	useDeleteDependent,
+	useUpdateDependent,
 } from '@/features/dependents/dependents.mutation';
 import { benefitsService } from '@/common/services/benefits.service';
 
@@ -27,6 +28,7 @@ function EmployeeViewRoute() {
 	});
 
 	const { createDependent, isPending: isCreatingDependent } = useCreateDepedent();
+	const { updateDependent, isPending: isUpdatingDependent } = useUpdateDependent();
 	const { deleteDependent, isPending: isDeletingDependent } = useDeleteDependent();
 
 	const benefitsServiceResults = benefitsService.calculateEmployeeBenefitsCost({
@@ -46,14 +48,16 @@ function EmployeeViewRoute() {
 				isRefetching={isRefetching}
 				isEmployeeLoading={isEmployeeLoading}
 				areDependentsLoading={areDependentsLoading}
-				onCreateDependent={createDependent}
 				isCreatingDependent={isCreatingDependent}
-				onDeleteDependent={deleteDependent}
+				isUpdatingDependent={isUpdatingDependent}
 				isDeletingDependent={isDeletingDependent}
 				baseSalary={benefitsServiceResults.baseSalaryPerPaycheck}
 				annualSalary={benefitsServiceResults.annualSalary}
 				perPaycheckAmount={benefitsServiceResults.perPaycheckAmount}
 				netPayPerPaycheck={benefitsServiceResults.netPayPerPaycheck}
+				onCreateDependent={createDependent}
+				onUpdateDependent={updateDependent}
+				onDeleteDependent={deleteDependent}
 			/>
 		</>
 	);

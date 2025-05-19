@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { TBenefitType } from '../types';
 
 // Define the available benefit types
-export const benefitTypes: TBenefitType[] = ['Medical', 'Dental', 'Vision', 'Life'];
+export const benefitTypes: TBenefitType[] = ['medical', 'dental', 'vision', 'life'];
 
 const noDuplicateBenefits = (benfits: TBenefitType[]) => {
 	const uniqueBenefits = new Set(benfits);
@@ -21,7 +21,7 @@ export const dependentFormSchema = z.object({
 	id: z.string().optional(),
 	firstName: z.string().min(1, { message: 'First name is required.' }),
 	lastName: z.string().min(1, { message: 'Last name is required.' }),
-	relationship: z.enum(['Spouse', 'Child'], {
+	relationship: z.enum(['spouse', 'child'], {
 		required_error: 'Please select a relationship.',
 	}),
 	benefits: benefitsArraySchema,

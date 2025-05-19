@@ -1,6 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { v4 as uuidv4 } from 'uuid';
-import { createDependentAsync, deleteDependentAsync } from './dependents.async';
+import {
+	createDependentAsync,
+	deleteDependentAsync,
+	updateDependentAsync,
+} from './dependents.async';
 import type { TDependent } from '@/common/types';
 
 export const useCreateDepedent = () => {
@@ -28,6 +32,26 @@ export const useCreateDepedent = () => {
 	const { mutateAsync: createDependent, ...rest } = mutationResult;
 
 	return { createDependent, ...rest };
+};
+
+export const useUpdateDependent = () => {
+	const queryClient = useQueryClient();
+
+	const mutationResult = useMutation({
+		mutationFn: async (dependent: TDependent) => updateDependentAsync(dependent),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ['dependents'],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ['employeesWithDependents'],
+			});
+		},
+	});
+
+	const { mutateAsync: updateDependent, ...rest } = mutationResult;
+
+	return { updateDependent, ...rest };
 };
 
 export const useDeleteDependent = () => {

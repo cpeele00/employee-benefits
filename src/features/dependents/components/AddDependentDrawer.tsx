@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shadcn/ui/button';
@@ -39,8 +39,8 @@ import {
 interface IAddDependentDrawerProps {
 	isOpen: boolean;
 	employeeId: string;
-	dependent?: TDependent;
-	isCreatingDependent: boolean;
+	dependent?: TDependent | null;
+	isPending: boolean;
 	onClose: () => void;
 	onSave: (dependent: TDependent) => Promise<void>;
 }
@@ -54,25 +54,46 @@ export const AddDependentDrawer: React.FC<IAddDependentDrawerProps> = ({
 	isOpen,
 	employeeId,
 	dependent,
-	isCreatingDependent,
+	isPending,
 	onClose,
 	onSave,
 }) => {
 	const form = useForm<TDependentFormValues>({
 		resolver: zodResolver(dependentFormSchema),
 		defaultValues: {
-			id: dependent?.id || '',
+			id: dependent?.id,
 			firstName: dependent?.firstName || '',
 			lastName: dependent?.lastName || '',
-			relationship: dependent?.relationship || 'Spouse',
+			relationship: dependent?.relationship || 'spouse',
 			benefits: dependent?.benefits || [],
 		},
-		disabled: isCreatingDependent,
+		disabled: isPending,
 	});
+
+	// Reset form when dependent changes
+	useEffect(() => {
+		if (dependent) {
+			form.reset({
+				id: dependent.id,
+				firstName: dependent.firstName || '',
+				lastName: dependent.lastName || '',
+				relationship: dependent.relationship || 'spouse',
+				benefits: dependent.benefits || [],
+			});
+		} else {
+			form.reset({
+				id: '',
+				firstName: '',
+				lastName: '',
+				relationship: 'spouse',
+				benefits: [],
+			});
+		}
+	}, [dependent, form]);
 
 	const onSubmit = (data: TDependentFormValues) => {
 		const dependentToSave: TDependent = {
-			id: data.id || '',
+			id: data.id,
 			employeeId,
 			firstName: data.firstName,
 			lastName: data.lastName,
@@ -152,8 +173,8 @@ export const AddDependentDrawer: React.FC<IAddDependentDrawerProps> = ({
 										<FormLabel>Relationship</FormLabel>
 										<Select
 											onValueChange={field.onChange}
-											defaultValue={field.value}
-											disabled={isCreatingDependent}
+											value={field.value}
+											disabled={isPending}
 										>
 											<FormControl>
 												<SelectTrigger className='w-full'>
@@ -161,10 +182,10 @@ export const AddDependentDrawer: React.FC<IAddDependentDrawerProps> = ({
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent>
-												<SelectItem value='Spouse'>
+												<SelectItem value='spouse'>
 													Spouse
 												</SelectItem>
-												<SelectItem value='Child'>
+												<SelectItem value='child'>
 													Child
 												</SelectItem>
 											</SelectContent>
@@ -176,7 +197,7 @@ export const AddDependentDrawer: React.FC<IAddDependentDrawerProps> = ({
 							<FormField
 								control={form.control}
 								name={`benefits`}
-								disabled={isCreatingDependent}
+								disabled={isPending}
 								render={({ field }) => (
 									<FormItem className='w-full'>
 										<FormLabel>Benefits</FormLabel>
@@ -200,7 +221,7 @@ export const AddDependentDrawer: React.FC<IAddDependentDrawerProps> = ({
 					<div className='flex justify-end gap-2'>
 						<Button
 							variant='outline'
-							disabled={isCreatingDependent}
+							disabled={isPending}
 							onClick={() => {
 								form.reset();
 
@@ -212,12 +233,10 @@ export const AddDependentDrawer: React.FC<IAddDependentDrawerProps> = ({
 						<Button
 							type='submit'
 							onClick={form.handleSubmit(onSubmit)}
-							disabled={isCreatingDependent}
+							disabled={isPending}
 						>
 							Save
-							{isCreatingDependent ? (
-								<Loader2 className='animate-spin' />
-							) : null}
+							{isPending ? <Loader2 className='animate-spin' /> : null}
 						</Button>
 					</div>
 				</SheetFooter>

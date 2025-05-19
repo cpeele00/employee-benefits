@@ -29,6 +29,7 @@ interface IEmployeeViewProps {
 	areDependentsLoading: boolean;
 	isRefetching: boolean;
 	isCreatingDependent: boolean;
+	isUpdatingDependent: boolean;
 	isDeletingDependent: boolean;
 	baseSalary: number;
 	annualSalary: number;
@@ -36,6 +37,7 @@ interface IEmployeeViewProps {
 	netPayPerPaycheck: number;
 	onDeleteDependent: (id: string) => Promise<boolean>;
 	onCreateDependent: (dependent: TDependent) => Promise<TDependent>;
+	onUpdateDependent: (dependent: TDependent) => Promise<TDependent>;
 }
 
 export const EmployeeView: React.FC<IEmployeeViewProps> = ({
@@ -46,26 +48,33 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 	isRefetching,
 	isDeletingDependent,
 	isCreatingDependent,
+	isUpdatingDependent,
 	baseSalary,
 	annualSalary,
 	perPaycheckAmount,
 	netPayPerPaycheck,
 	onCreateDependent,
+	onUpdateDependent,
 	onDeleteDependent,
 }) => {
 	const [isAddDependentDrawerOpen, setIsAddDependentDrawerOpen] =
 		useState<boolean>(false);
 
-	const isPending = isRefetching || isDeletingDependent;
+	const [selectedDependent, setSelectedDependent] = useState<TDependent | null>(null);
+
+	const isPending =
+		isRefetching || isDeletingDependent || isUpdatingDependent || isCreatingDependent;
 
 	const handleCreateSuccess = () => {
 		// Close the drawer
 		setIsAddDependentDrawerOpen(false);
+		setSelectedDependent(null);
 	};
 
 	const handleUpdateSuccess = () => {
 		// Close the drawer
 		setIsAddDependentDrawerOpen(false);
+		setSelectedDependent(null);
 	};
 
 	const employeeBenefitsCosts = {
@@ -184,7 +193,7 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 									</div>
 								</FlexTableCell>
 								<FlexTableCell column='cost' className='text-right'>
-									$0
+									{/* $0 */}
 								</FlexTableCell>
 								<FlexTableCell column='actions' className='text-right'>
 									<div className='flex justify-end space-x-2'>
@@ -193,6 +202,10 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 											size='icon'
 											className='ml-auto'
 											disabled={isPending}
+											onClick={() => {
+												setSelectedDependent(dependent);
+												setIsAddDependentDrawerOpen(true);
+											}}
 										>
 											<Pencil className='h-4 w-4' />
 											<span className='sr-only'>Edit</span>
@@ -223,22 +236,38 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 				<AddDependentDrawer
 					isOpen={isAddDependentDrawerOpen && !!employee}
 					employeeId={employee?.id ?? ''}
-					isCreatingDependent={isCreatingDependent}
+					dependent={selectedDependent || null}
+					isPending={isPending}
 					onClose={() => {
 						setIsAddDependentDrawerOpen(false);
+						setSelectedDependent(null);
 					}}
 					onSave={(dependent: TDependent) => {
-						return onCreateDependent(dependent)
-							.then(() => {
-								handleCreateSuccess();
-							})
-							.catch((err: unknown) => {
-								if (err instanceof Error) {
-									console.error(err.message);
-								} else {
-									console.error(err);
-								}
-							});
+						if (dependent.id) {
+							return onUpdateDependent(dependent)
+								.then(() => {
+									handleUpdateSuccess();
+								})
+								.catch((err: unknown) => {
+									if (err instanceof Error) {
+										console.error(err.message);
+									} else {
+										console.error(err);
+									}
+								});
+						} else {
+							return onCreateDependent(dependent)
+								.then(() => {
+									handleCreateSuccess();
+								})
+								.catch((err: unknown) => {
+									if (err instanceof Error) {
+										console.error(err.message);
+									} else {
+										console.error(err);
+									}
+								});
+						}
 					}}
 				/>,
 				document.body

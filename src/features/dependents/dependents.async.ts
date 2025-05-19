@@ -64,6 +64,25 @@ export const createDependentAsync = async (dependent: TDependent) => {
 	return res.json() as Promise<TDependent>;
 };
 
+export const updateDependentAsync = async (dependent: TDependent) => {
+	// simulate network latency
+	await new Promise((resolve) => setTimeout(resolve, 1000));
+
+	const res: Response = await fetch(`${API_URL}/dependents/${dependent.id}`, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(dependent),
+	});
+
+	if (!res.ok) {
+		throw new Error('Network response was not ok');
+	}
+
+	return res.json() as Promise<TDependent>;
+};
+
 export const deleteDependentAsync = async (id: string) => {
 	// simulate network latency
 	await new Promise((resolve) => setTimeout(resolve, 300));
