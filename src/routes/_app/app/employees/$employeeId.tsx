@@ -1,4 +1,4 @@
-import { createFileRoute, useMatch } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { EmployeeView } from '@/features/employees/EmployeeView';
 import { useGetEmployeeByIdQuery } from '@/features/employees/employees.query';
 import { useGetAllDependentsByEmployeeIdQuery } from '@/features/dependents/dependents.query';
@@ -13,8 +13,8 @@ export const Route = createFileRoute('/_app/app/employees/$employeeId')({
 });
 
 function EmployeeViewRoute() {
-	const { params } = useMatch('/app/employees/$employeeId/');
-	const { employeeId } = params;
+	const { employeeId } = Route.useParams();
+
 	const { employee, isLoading: isEmployeeLoading } =
 		useGetEmployeeByIdQuery(employeeId);
 
