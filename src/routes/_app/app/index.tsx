@@ -1,4 +1,4 @@
-import { Dashboard } from '@/features/dashboard/Dashboard';
+import { DashboardView } from '@/features/dashboard/DashboardView';
 import { useGetAllEmployeesWithDependentsQuery } from '@/features/dashboard/dashboard.query';
 import {
 	useCreateEmployee,
@@ -23,7 +23,7 @@ function DashboardRoute() {
 
 	return (
 		<>
-			<Dashboard
+			<DashboardView
 				employeesWithDependents={employeesWithDependents}
 				isLoading={isLoading}
 				isRefetching={isRefetching}

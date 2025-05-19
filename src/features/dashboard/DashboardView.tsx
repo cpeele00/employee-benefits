@@ -29,7 +29,7 @@ interface IDashboardProps {
 	onDeleteEmployee: (id: string) => Promise<boolean>;
 }
 
-export const Dashboard: React.FC<IDashboardProps> = ({
+export const DashboardView: React.FC<IDashboardProps> = ({
 	employeesWithDependents = [],
 	isLoading = false,
 	isRefetching = false,
