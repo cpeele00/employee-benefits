@@ -58,11 +58,11 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 			</div>
 			<FlexTable
 				columns={[
-					{ id: 'employee' },
-					{ id: 'dependents' },
-					{ id: 'annualCost' },
-					{ id: 'perPaycheck' },
-					{ id: 'actions', width: 'text-right' },
+					{ id: 'employee', width: 'w-1/4' },
+					{ id: 'dependents', width: 'w-1/4' },
+					{ id: 'annualCost', width: 'w-1/6' },
+					{ id: 'perPaycheck', width: 'w-1/6' },
+					{ id: 'actions', width: 'w-1/6 text-right' },
 				]}
 			>
 				<FlexTableHeader>
@@ -98,7 +98,7 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 							<FlexTableCell column='annualCost'>$0</FlexTableCell>
 							<FlexTableCell column='perPaycheck'>$0</FlexTableCell>
 							<FlexTableCell column='actions'>
-								<div className='flex space-x-2'>
+								<div className='flex justify-end space-x-2'>
 									<Button
 										variant='ghost'
 										size='icon'
