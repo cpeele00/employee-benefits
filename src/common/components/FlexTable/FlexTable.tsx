@@ -13,7 +13,7 @@ interface FlexTableProps extends React.HTMLAttributes<HTMLDivElement> {
 	columns: { id: string; width?: string }[];
 }
 
-export function FlexTable({ columns, className, children, ...props }: FlexTableProps) {
+export const FlexTable = ({ columns, className, children, ...props }: FlexTableProps) => {
 	return (
 		<FlexTableContext.Provider value={{ columns }}>
 			<div className={cn('flex flex-col w-full', className)} {...props}>
@@ -21,12 +21,16 @@ export function FlexTable({ columns, className, children, ...props }: FlexTableP
 			</div>
 		</FlexTableContext.Provider>
 	);
-}
+};
 
 // Header component
 interface FlexTableHeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function FlexTableHeader({ className, children, ...props }: FlexTableHeaderProps) {
+export const FlexTableHeader = ({
+	className,
+	children,
+	...props
+}: FlexTableHeaderProps) => {
 	return (
 		<div
 			className={cn('flex w-full py-3 border-b border-border', className)}
@@ -35,19 +39,19 @@ export function FlexTableHeader({ className, children, ...props }: FlexTableHead
 			{children}
 		</div>
 	);
-}
+};
 
 // Header cell component
 interface FlexTableHeaderCellProps extends React.HTMLAttributes<HTMLDivElement> {
 	column: string;
 }
 
-export function FlexTableHeaderCell({
+export const FlexTableHeaderCell = ({
 	column,
 	className,
 	children,
 	...props
-}: FlexTableHeaderCellProps) {
+}: FlexTableHeaderCellProps) => {
 	const { columns } = useContext(FlexTableContext);
 	const columnConfig = columns.find((c) => c.id === column);
 
@@ -63,28 +67,28 @@ export function FlexTableHeaderCell({
 			{children}
 		</div>
 	);
-}
+};
 
 // Body component
 interface FlexTableBodyProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function FlexTableBody({ className, children, ...props }: FlexTableBodyProps) {
+export const FlexTableBody = ({ className, children, ...props }: FlexTableBodyProps) => {
 	return (
 		<div className={cn('flex flex-col w-full space-y-4 mt-4', className)} {...props}>
 			{children}
 		</div>
 	);
-}
+};
 
 // Row component
 interface FlexTableRowProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function FlexTableRow({ className, children, ...props }: FlexTableRowProps) {
+export const FlexTableRow = ({ className, children, ...props }: FlexTableRowProps) => {
 	return (
 		<div
 			className={cn(
-				'flex w-full items-center rounded-lg p-4 cursor-pointer shadow-sm text-card-foreground',
-				'bg-[var(--flex-table-row)]', // Use the custom CSS variable
+				'flex w-full items-center rounded-lg p-4 shadow-sm text-card-foreground',
+				'bg-[var(--flex-table-row)]',
 				className
 			)}
 			{...props}
@@ -92,19 +96,19 @@ export function FlexTableRow({ className, children, ...props }: FlexTableRowProp
 			{children}
 		</div>
 	);
-}
+};
 
 // Cell component
 interface FlexTableCellProps extends React.HTMLAttributes<HTMLDivElement> {
 	column: string;
 }
 
-export function FlexTableCell({
+export const FlexTableCell = ({
 	column,
 	className,
 	children,
 	...props
-}: FlexTableCellProps) {
+}: FlexTableCellProps) => {
 	const { columns } = useContext(FlexTableContext);
 	const columnConfig = columns.find((c) => c.id === column);
 
@@ -116,4 +120,4 @@ export function FlexTableCell({
 			{children}
 		</div>
 	);
-}
+};
