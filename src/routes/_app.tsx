@@ -39,12 +39,12 @@ function RouteComponent() {
 											Employee Benefits Calculator
 										</BreadcrumbLink>
 									</BreadcrumbItem>
-									<BreadcrumbSeparator className='hidden md:block' />
+									{/* <BreadcrumbSeparator className='hidden md:block' />
 									<BreadcrumbItem>
 										<BreadcrumbPage className='font-semibold capitalize'>
 											{currentPageName}
 										</BreadcrumbPage>
-									</BreadcrumbItem>
+									</BreadcrumbItem> */}
 								</BreadcrumbList>
 							</Breadcrumb>
 						</div>

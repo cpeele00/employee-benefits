@@ -6,6 +6,7 @@ import {
 	useCreateDepedent,
 	useDeleteDependent,
 } from '@/features/dependents/dependents.mutation';
+import { benefitsService } from '@/common/services/benefits.service';
 
 export const Route = createFileRoute('/_app/app/employees/$employeeId')({
 	component: EmployeeViewRoute,
@@ -28,10 +29,19 @@ function EmployeeViewRoute() {
 	const { createDependent, isPending: isCreatingDependent } = useCreateDepedent();
 	const { deleteDependent, isPending: isDeletingDependent } = useDeleteDependent();
 
+	const benefitsServiceResults = benefitsService.calculateEmployeeBenefitsCost({
+		employee: employee || null,
+		dependents,
+	});
+
+	if (!employeeId) {
+		return <div>Employee not found</div>;
+	}
+
 	return (
 		<>
 			<EmployeeView
-				employee={employee}
+				employee={employee || null}
 				dependents={dependents}
 				isRefetching={isRefetching}
 				isEmployeeLoading={isEmployeeLoading}
@@ -40,6 +50,10 @@ function EmployeeViewRoute() {
 				isCreatingDependent={isCreatingDependent}
 				onDeleteDependent={deleteDependent}
 				isDeletingDependent={isDeletingDependent}
+				baseSalary={benefitsServiceResults.baseSalaryPerPaycheck}
+				annualSalary={benefitsServiceResults.annualSalary}
+				perPaycheckAmount={benefitsServiceResults.perPaycheckAmount}
+				netPayPerPaycheck={benefitsServiceResults.netPayPerPaycheck}
 			/>
 		</>
 	);

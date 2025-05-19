@@ -23,13 +23,17 @@ import { createPortal } from 'react-dom';
 import { AddDependentDrawer } from '../dependents/components/AddDependentDrawer';
 
 interface IEmployeeViewProps {
-	employee: TEmployee | undefined;
+	employee: TEmployee | null;
 	dependents?: TDependent[];
 	isEmployeeLoading: boolean;
 	areDependentsLoading: boolean;
 	isRefetching: boolean;
 	isCreatingDependent: boolean;
 	isDeletingDependent: boolean;
+	baseSalary: number;
+	annualSalary: number;
+	perPaycheckAmount: number;
+	netPayPerPaycheck: number;
 	onDeleteDependent: (id: string) => Promise<boolean>;
 	onCreateDependent: (dependent: TDependent) => Promise<TDependent>;
 }
@@ -42,6 +46,10 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 	isRefetching,
 	isDeletingDependent,
 	isCreatingDependent,
+	baseSalary,
+	annualSalary,
+	perPaycheckAmount,
+	netPayPerPaycheck,
 	onCreateDependent,
 	onDeleteDependent,
 }) => {
@@ -58,6 +66,13 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 	const handleUpdateSuccess = () => {
 		// Close the drawer
 		setIsAddDependentDrawerOpen(false);
+	};
+
+	const employeeBenefitsCosts = {
+		baseSalaryPerPaycheck: baseSalary,
+		annualSalary: annualSalary,
+		perPaycheckAmount: perPaycheckAmount,
+		netPayPerPaycheck: netPayPerPaycheck,
 	};
 
 	return (
@@ -80,27 +95,51 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 			<section className='flex gap-4 mt-10'>
 				<BenefitsCard
 					title='Base Salary'
-					text={`$${2000}`}
+					text={employeeBenefitsCosts.baseSalaryPerPaycheck.toLocaleString(
+						'en-US',
+						{
+							style: 'currency',
+							currency: 'USD',
+							minimumFractionDigits: 2,
+							maximumFractionDigits: 2,
+						}
+					)}
 					subtext='per paycheck'
 					icon={<Banknote className='text-green-600' size={30} />}
 				/>
 				<BenefitsCard
 					title='Benefits Cost'
-					text={`$${96.15}`}
+					text={employeeBenefitsCosts.perPaycheckAmount.toLocaleString(
+						'en-US',
+						{
+							style: 'currency',
+							currency: 'USD',
+							minimumFractionDigits: 2,
+							maximumFractionDigits: 2,
+						}
+					)}
 					subtext='per paycheck'
 					icon={<HeartPulse className='text-red-500' size={30} />}
 				/>
 
 				<BenefitsCard
 					title='Total Dependents'
-					text={2}
+					text={dependents?.length || 0}
 					subtext='family members'
 					icon={<UsersRound className='text-blue-500' size={30} />}
 				/>
 
 				<BenefitsCard
 					title='Net Pay'
-					text={`$${1033.85}`}
+					text={employeeBenefitsCosts.netPayPerPaycheck.toLocaleString(
+						'en-US',
+						{
+							style: 'currency',
+							currency: 'USD',
+							minimumFractionDigits: 2,
+							maximumFractionDigits: 2,
+						}
+					)}
 					subtext='per paycheck'
 					icon={<DollarSign className='text-yellow-500' size={30} />}
 				/>
