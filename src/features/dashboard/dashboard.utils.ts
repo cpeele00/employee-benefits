@@ -1,6 +1,4 @@
-import type { TDependent } from '../dependents/dependents.types';
-import type { TEmployee } from '../employees/employees.types';
-import type { TEmployeeDependent } from './dashboard.types';
+import type { TDependent, TEmployee, TEmployeeDependent } from '@/common/types';
 
 export const mapEmployeesToDependents = (
 	employees: TEmployee[],

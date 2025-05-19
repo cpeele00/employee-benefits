@@ -16,6 +16,23 @@ export const getAllDependentsAsync = async (): Promise<TDependent[]> => {
 	return dependents;
 };
 
+export const getAllDependentsByEmployeeIdAsync = async (
+	employeeId: string
+): Promise<TDependent[]> => {
+	// simulate network latency
+	await new Promise((resolve) => setTimeout(resolve, 1000));
+
+	const res: Response = await fetch(`${API_URL}/dependents?employeeId=${employeeId}`);
+
+	if (!res.ok) {
+		throw new Error('Network response was not ok');
+	}
+
+	const dependents: TDependent[] = await res.json();
+
+	return dependents;
+};
+
 export const getDependentAsync = async (id: string): Promise<TDependent> => {
 	const res: Response = await fetch(`${API_URL}/dependents/${id}`);
 

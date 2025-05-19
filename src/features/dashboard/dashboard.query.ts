@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient, type UseQueryResult } from '@tanstack/react-query';
+import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import type { TEmployeeDependent } from '@/common/types';
 import { getAllEmployeesAsync } from '../employees/employees.async';
 import { getAllDependentsAsync } from '../dependents/dependents.async';

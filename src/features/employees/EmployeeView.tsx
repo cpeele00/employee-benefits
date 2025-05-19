@@ -1,15 +1,29 @@
 import type React from 'react';
-import type { TEmployee } from '@/common/types';
+import type { TDependent, TEmployee } from '@/common/types';
 import { Avatar } from '@/common/components';
 import { Button } from '@/shadcn/ui/button';
-import { Banknote, DollarSign, HeartPulse, UsersRound } from 'lucide-react';
+import {
+	Banknote,
+	DollarSign,
+	HeartPulse,
+	Pencil,
+	Trash2,
+	UsersRound,
+} from 'lucide-react';
 import { BenefitsCard } from '@/common/components/BenefitsCard/BenefitsCard';
+import { FlexTable } from '@/common/components/FlexTable/FlexTable';
+import {
+	FlexTableBody,
+	FlexTableCell,
+	FlexTableRow,
+} from '@/common/components/FlexTable/FlexTable';
 
 interface IEmployeeViewProps {
 	employee: TEmployee | undefined;
+	dependents: TDependent[];
 }
 
-export const EmployeeView: React.FC<IEmployeeViewProps> = ({ employee }) => {
+export const EmployeeView: React.FC<IEmployeeViewProps> = ({ employee, dependents }) => {
 	return (
 		<div>
 			<section className='flex justify-between items-center mb-4'>
@@ -55,6 +69,61 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({ employee }) => {
 					subtext='per paycheck'
 					icon={<DollarSign className='text-yellow-500' size={30} />}
 				/>
+			</section>
+
+			<section>
+				<h2 className='text-2xl font-semibold mt-10'>Dependents</h2>
+
+				<FlexTable
+					columns={[
+						{ id: 'depdentName', width: 'w-full' },
+						{ id: 'cost', width: 'text-right' },
+						{ id: 'actions', width: 'text-right' },
+					]}
+				>
+					<FlexTableBody>
+						{dependents.map((dependent) => (
+							<FlexTableRow key={dependent.id}>
+								<FlexTableCell column='depdentName'>
+									<div className='flex items-center gap-3'>
+										<Avatar
+											size='lg'
+											name={
+												dependent.firstName +
+												' ' +
+												dependent.lastName
+											}
+										/>
+										{dependent.firstName} {dependent.lastName}
+									</div>
+								</FlexTableCell>
+								<FlexTableCell column='cost' className='text-right'>
+									$0
+								</FlexTableCell>
+								<FlexTableCell column='actions' className='text-right'>
+									<div className='flex justify-end space-x-2'>
+										<Button
+											variant='ghost'
+											size='icon'
+											className='ml-auto'
+										>
+											<Pencil className='h-4 w-4' />
+											<span className='sr-only'>Edit</span>
+										</Button>
+										<Button
+											variant='ghost'
+											size='icon'
+											className='ml-auto'
+										>
+											<Trash2 className='h-4 w-4' />
+											<span className='sr-only'>Delete</span>
+										</Button>
+									</div>
+								</FlexTableCell>
+							</FlexTableRow>
+						))}
+					</FlexTableBody>
+				</FlexTable>
 			</section>
 		</div>
 	);
