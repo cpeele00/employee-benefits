@@ -70,6 +70,12 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 		disabled: isPending,
 	});
 
+	// Setup field array for dependents
+	const { fields, append, remove } = useFieldArray({
+		name: 'dependents',
+		control: form.control,
+	});
+
 	useEffect(() => {
 		if (employee) {
 			form.reset({
@@ -88,13 +94,7 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 				dependents: [],
 			});
 		}
-	}, [employee, form]);
-
-	// Setup field array for dependents
-	const { fields, append, remove } = useFieldArray({
-		name: 'dependents',
-		control: form.control,
-	});
+	}, [employee]);
 
 	const handleAddDependent = () => {
 		// Add a new dependent to the field array

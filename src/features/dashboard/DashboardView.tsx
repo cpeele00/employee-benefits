@@ -138,7 +138,14 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 											size='icon'
 											disabled={isPending}
 											onClick={() => {
-												setSelectedEmployee(item.employee);
+												const employeeWithDependents = {
+													...item.employee,
+													dependents: item.dependents || [],
+												};
+
+												setSelectedEmployee(
+													employeeWithDependents
+												);
 												setIsAddEmployeeDrawerOpen(true);
 											}}
 										>
