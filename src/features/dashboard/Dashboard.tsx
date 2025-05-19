@@ -13,7 +13,7 @@ import {
 } from '@/common/components/FlexTable/FlexTable';
 import { Avatar, AvatarGroup } from '@/common/components';
 import { AddEmployeeDependentDrawer } from './components/AddEmployeeDependentDrawer';
-import { Divide, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { CircularProgress } from '@/common/components/CircularProgress/CircularProgress';
 import { Link } from '@tanstack/react-router';
 
@@ -57,7 +57,11 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 			<TitleCard title='Dashboard' />
 			<div className='flex justify-between w-full mb-4 mt-10'>
 				{isRefetching ? <CircularProgress /> : <div></div>}
-				<Button onClick={() => setIsAddEmployeeDrawerOpen(true)}>
+				<Button
+					className='flex items-center gap-1'
+					onClick={() => setIsAddEmployeeDrawerOpen(true)}
+				>
+					<Plus />
 					Add Employee
 				</Button>
 			</div>

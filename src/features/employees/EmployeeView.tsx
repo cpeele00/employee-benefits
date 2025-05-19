@@ -6,17 +6,19 @@ import {
 	Banknote,
 	DollarSign,
 	HeartPulse,
+	Plus,
 	Pencil,
 	Trash2,
 	UsersRound,
 } from 'lucide-react';
 import { BenefitsCard } from '@/common/components';
-import { FlexTable } from '@/common/components/FlexTable/FlexTable';
 import {
+	FlexTable,
 	FlexTableBody,
 	FlexTableCell,
 	FlexTableRow,
 } from '@/common/components/FlexTable/FlexTable';
+import { CircularProgress } from '@/common/components/CircularProgress/CircularProgress';
 
 interface IEmployeeViewProps {
 	employee: TEmployee | undefined;
@@ -39,7 +41,6 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({ employee, dependent
 						<span className='text-sm'>Employee ID: {employee?.id}</span>
 					</div>
 				</div>
-				<Button>Add Dependent</Button>
 			</section>
 
 			<section className='flex gap-4 mt-10'>
@@ -72,7 +73,13 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({ employee, dependent
 			</section>
 
 			<section>
-				<h2 className='text-2xl font-semibold mt-10'>Dependents</h2>
+				<div className='flex justify-between items-center w-full mb-2 mt-12'>
+					<CircularProgress />
+					<Button className='flex items-center gap-1'>
+						<Plus />
+						Add Dependent
+					</Button>
+				</div>
 
 				<FlexTable
 					columns={[

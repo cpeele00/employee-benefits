@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loader2, PlusCircle, Trash2 } from 'lucide-react';
+import { Loader2, Plus, Trash2 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shadcn/ui/button';
 import {
@@ -191,8 +191,8 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 										disabled={isCreatingEmployee}
 										className='flex items-center gap-1'
 									>
+										<Plus />
 										Add Dependent
-										<PlusCircle className='h-4 w-4' />
 									</Button>
 								</div>
 
@@ -312,10 +312,10 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 													onClick={() =>
 														handleRemoveDependent(index)
 													}
-													className='ml-auto flex items-center text-violet-600'
+													className='ml-auto flex items-center gap-1 text-violet-600'
 												>
-													Remove Dependent
 													<Trash2 className='h-4 w-4 mr-1' />
+													Remove Dependent
 												</Button>
 											</div>
 										))}
