@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { TEmployee, TEmployeeDependent } from '@/common/types';
-import { Skeleton, TitleCard } from '@/common/components';
+import { SkeletonRow, TitleCard } from '@/common/components';
 import { Button } from '@/shadcn/ui/button';
 import {
 	FlexTable,
@@ -78,7 +78,7 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 			</div>
 
 			{isLoading ? (
-				<Skeleton count={5} />
+				<SkeletonRow count={5} />
 			) : (
 				<FlexTable
 					columns={[
