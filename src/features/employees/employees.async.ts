@@ -30,7 +30,7 @@ export const getEmployeeByIdAsync = async (id: string): Promise<TEmployee> => {
 
 export const createEmployeeAsync = async (employee: TEmployee) => {
 	// simulate network latency
-	await new Promise((resolve) => setTimeout(resolve, 5000));
+	await new Promise((resolve) => setTimeout(resolve, 1000));
 
 	const res = await fetch(`${API_URL}/employees`, {
 		method: 'POST',

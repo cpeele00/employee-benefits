@@ -6,7 +6,11 @@ import {
 	deleteEmployeeAsync,
 	updateEmployeeAsync,
 } from './employees.async';
-import { createDependentAsync } from '../dependents/dependents.async';
+import {
+	createDependentAsync,
+	deleteDependentAsync,
+	getAllDependentsByEmployeeIdAsync,
+} from '../dependents/dependents.async';
 
 export const useCreateEmployee = () => {
 	const queryClient = useQueryClient();
@@ -50,7 +54,7 @@ export const useCreateEmployee = () => {
 					});
 
 					queryClient.invalidateQueries({
-						queryKey: ['dependents'],
+						queryKey: ['dependents', createdEmployee.id],
 					});
 				});
 			} else {
@@ -90,10 +94,30 @@ export const useDeleteEmployee = () => {
 	const queryClient = useQueryClient();
 
 	const mutationResult = useMutation({
-		mutationFn: (id: string) => deleteEmployeeAsync(id),
+		mutationFn: async (id: string) => {
+			// First, get all dependents for this employee
+			const dependents = await getAllDependentsByEmployeeIdAsync(id);
+
+			// Delete all dependents first
+			const deletePromises = dependents.map((dependent) => {
+				return dependent.id
+					? deleteDependentAsync(dependent.id)
+					: Promise.resolve();
+			});
+
+			// Wait for all dependent deletions to complete
+			await Promise.all(deletePromises);
+
+			// Then delete the employee
+			return deleteEmployeeAsync(id);
+		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: ['employeesWithDependents', 'employees'],
+				queryKey: ['employeesWithDependents'],
+			});
+
+			queryClient.invalidateQueries({
+				queryKey: ['employees'],
 			});
 		},
 	});

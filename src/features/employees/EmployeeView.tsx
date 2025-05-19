@@ -10,7 +10,7 @@ import {
 	Trash2,
 	UsersRound,
 } from 'lucide-react';
-import { BenefitsCard } from '@/common/components/BenefitsCard/BenefitsCard';
+import { BenefitsCard } from '@/common/components';
 import { FlexTable } from '@/common/components/FlexTable/FlexTable';
 import {
 	FlexTableBody,
@@ -20,7 +20,7 @@ import {
 
 interface IEmployeeViewProps {
 	employee: TEmployee | undefined;
-	dependents: TDependent[];
+	dependents?: TDependent[];
 }
 
 export const EmployeeView: React.FC<IEmployeeViewProps> = ({ employee, dependents }) => {
@@ -82,7 +82,7 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({ employee, dependent
 					]}
 				>
 					<FlexTableBody>
-						{dependents.map((dependent) => (
+						{dependents?.map((dependent) => (
 							<FlexTableRow key={dependent.id}>
 								<FlexTableCell column='depdentName'>
 									<div className='flex items-center gap-3'>

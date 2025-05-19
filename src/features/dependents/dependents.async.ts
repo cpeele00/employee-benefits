@@ -63,3 +63,18 @@ export const createDependentAsync = async (dependent: TDependent) => {
 
 	return res.json() as Promise<TDependent>;
 };
+
+export const deleteDependentAsync = async (id: string) => {
+	// simulate network latency
+	await new Promise((resolve) => setTimeout(resolve, 300));
+
+	const res: Response = await fetch(`${API_URL}/dependents/${id}`, {
+		method: 'DELETE',
+	});
+
+	if (!res.ok) {
+		throw new Error('Network response was not ok');
+	}
+
+	return true;
+};
