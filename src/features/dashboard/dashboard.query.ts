@@ -16,21 +16,13 @@ type TEmployeeDependentsQueryResult = Omit<
 
 export const useGetAllEmployeesWithDependentsQuery =
 	(): TEmployeeDependentsQueryResult => {
-		const queryClient = useQueryClient();
-
 		const queryResult = useQuery({
-			queryKey: ['employeesWithDependents', 'employees', 'dependents'],
+			queryKey: ['employeesWithDependents'],
 			queryFn: async () => {
 				// Fetch employees and dependents in parallel
 				const [employees, dependents] = await Promise.all([
-					queryClient.fetchQuery({
-						queryKey: ['employees'],
-						queryFn: getAllEmployeesAsync,
-					}),
-					queryClient.fetchQuery({
-						queryKey: ['dependents'],
-						queryFn: getAllDependentsAsync,
-					}),
+					getAllEmployeesAsync(),
+					getAllDependentsAsync(),
 				]);
 
 				// Return both datasets in a structured format

@@ -12,7 +12,7 @@ export const Route = createFileRoute('/_app/app/')({
 });
 
 function DashboardRoute() {
-	const { employeesWithDependents, isLoading } =
+	const { employeesWithDependents, isLoading, isRefetching } =
 		useGetAllEmployeesWithDependentsQuery();
 
 	const { createEmployee, isPending: isCreatingEmployee } = useCreateEmployee();
@@ -26,6 +26,7 @@ function DashboardRoute() {
 			<Dashboard
 				employeesWithDependents={employeesWithDependents}
 				isLoading={isLoading}
+				isRefetching={isRefetching}
 				isCreatingEmployee={isCreatingEmployee}
 				onCreateEmployee={createEmployee}
 				isUpdatingEmployee={isUpdatingEmployee}
