@@ -51,7 +51,7 @@ function RouteComponent() {
 						<DarkModeToggle />
 					</div>
 				</header>
-				<div className='p-4 pt-0'>
+				<div className='pl-10 pr-10 p-4'>
 					<Outlet />
 				</div>
 			</SidebarInset>

@@ -29,7 +29,6 @@ export const useGetEmployeeByIdQuery = (employeeId: string): TEmployeeQueryResul
 		queryKey: ['employee'],
 		queryFn: () => getEmployeeByIdAsync(employeeId),
 		refetchOnWindowFocus: 'always',
-		staleTime: 1000 * 60 * 2,
 	});
 
 	const { data: employee, ...rest } = queryResult;
