@@ -65,3 +65,18 @@ export const updateEmployeeAsync = async (employee: TEmployee) => {
 
 	return res.json() as Promise<TEmployee>;
 };
+
+export const deleteEmployeeAsync = async (id: string) => {
+	// simulate network latency
+	// await new Promise((resolve) => setTimeout(resolve, 1000));
+
+	const res = await fetch(`${API_URL}/employees/${id}`, {
+		method: 'DELETE',
+	});
+
+	if (!res.ok) {
+		throw new Error('Network response was not ok');
+	}
+
+	return true;
+};

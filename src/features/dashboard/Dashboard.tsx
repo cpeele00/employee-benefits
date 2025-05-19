@@ -18,9 +18,11 @@ interface IDashboardProps {
 	employeesWithDependents: TEmployeeDependent[] | undefined;
 	isLoading: boolean;
 	isCreatingEmployee: boolean;
-	onCreateEmployee: (employee: TEmployee) => void;
+	onCreateEmployee: (employee: TEmployee) => Promise<TEmployee>;
 	isUpdatingEmployee: boolean;
-	onUpdateEmployee: (employee: TEmployee) => void;
+	onUpdateEmployee: (employee: TEmployee) => Promise<TEmployee>;
+	isDeletingEmployee: boolean;
+	onDeleteEmployee: (id: string) => Promise<boolean>;
 }
 
 export const Dashboard: React.FC<IDashboardProps> = ({
@@ -30,6 +32,8 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 	onCreateEmployee,
 	isUpdatingEmployee = false,
 	onUpdateEmployee,
+	isDeletingEmployee = false,
+	onDeleteEmployee,
 }) => {
 	const [isAddEmployeeDrawerOpen, setIsAddEmployeeDrawerOpen] = React.useState(false);
 
@@ -95,7 +99,26 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 								$0
 							</FlexTableCell>
 							<FlexTableCell column='actions'>
-								<Button variant='outline'>Edit</Button>
+								<Button
+									variant='outline'
+									onClick={() => {
+										setIsAddEmployeeDrawerOpen(true);
+									}}
+								>
+									Edit
+								</Button>
+								<Button
+									variant='outline'
+									type='button'
+									onClick={(e) => {
+										e.preventDefault();
+										if (item.employee.id) {
+											onDeleteEmployee(item.employee.id);
+										}
+									}}
+								>
+									Delete
+								</Button>
 							</FlexTableCell>
 						</FlexTableRow>
 					))}
@@ -107,17 +130,11 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 					employee={null}
 					isCreatingEmployee={isCreatingEmployee}
 					onSave={(employee: TEmployee) => {
-						if (employee.id) {
-							onUpdateEmployee(employee),
-								{
-									onSuccess: handleUpdateSuccess,
-								};
-						} else {
-							onCreateEmployee(employee),
-								{
-									onSuccess: handleCreateSuccess,
-								};
-						}
+						onCreateEmployee(employee)
+							.then(handleCreateSuccess)
+							.catch((err) => {
+								console.error(err);
+							});
 					}}
 					onClose={() => {
 						setIsAddEmployeeDrawerOpen(false);

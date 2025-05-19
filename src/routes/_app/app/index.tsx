@@ -2,6 +2,7 @@ import { Dashboard } from '@/features/dashboard/Dashboard';
 import { useGetAllEmployeesWithDependentsQuery } from '@/features/dashboard/dashboard.query';
 import {
 	useCreateEmployee,
+	useDeleteEmployee,
 	useUpdateEmployee,
 } from '@/features/employees/employees.mutation';
 import { createFileRoute } from '@tanstack/react-router';
@@ -18,6 +19,8 @@ function DashboardRoute() {
 
 	const { updateEmployee, isPending: isUpdatingEmployee } = useUpdateEmployee();
 
+	const { deleteEmployee, isPending: isDeletingEmployee } = useDeleteEmployee();
+
 	return (
 		<>
 			<Dashboard
@@ -27,6 +30,8 @@ function DashboardRoute() {
 				onCreateEmployee={createEmployee}
 				isUpdatingEmployee={isUpdatingEmployee}
 				onUpdateEmployee={updateEmployee}
+				isDeletingEmployee={isDeletingEmployee}
+				onDeleteEmployee={deleteEmployee}
 			/>
 		</>
 	);

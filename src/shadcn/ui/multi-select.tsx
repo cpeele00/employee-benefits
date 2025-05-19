@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Check, ChevronsUpDown, X } from 'lucide-react';
 import { Badge } from '@/shadcn/ui/badge';
-import { Button } from '@/shadcn/ui/button';
+import { Button, buttonVariants } from '@/shadcn/ui/button';
 import {
 	Command,
 	CommandEmpty,
@@ -46,11 +46,13 @@ export function MultiSelect({
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
-				<Button
-					variant='outline'
+				<div
+					className={cn(
+						buttonVariants({ variant: 'outline' }),
+						'w-full justify-between h-auto min-h-10 cursor-pointer'
+					)}
 					role='combobox'
 					aria-expanded={open}
-					className='w-full justify-between h-auto min-h-10'
 				>
 					<div className='flex flex-wrap gap-1 py-1'>
 						{selected.length > 0 ? (
@@ -63,19 +65,24 @@ export function MultiSelect({
 										className='rounded-sm px-1 font-normal'
 									>
 										{option?.label}
-										<button
-											type='button'
-											className='ml-1 rounded-sm outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2'
+										<span
+											role='button'
+											tabIndex={0}
+											className='ml-1 rounded-sm outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer'
 											onClick={(e) => {
 												e.stopPropagation();
 												handleUnselect(item);
 											}}
+											onKeyDown={(e) => {
+												if (e.key === 'Enter' || e.key === ' ') {
+													e.preventDefault();
+													handleUnselect(item);
+												}
+											}}
 										>
-											<X className='h-3 w-3 text-muted-foreground hover:text-foreground' />
-											<span className='sr-only'>
-												Remove {option?.label}
-											</span>
-										</button>
+											<X className='h-3 w-3' />
+											<span className='sr-only'>Remove</span>
+										</span>
 									</Badge>
 								);
 							})
@@ -84,7 +91,7 @@ export function MultiSelect({
 						)}
 					</div>
 					<ChevronsUpDown className='h-4 w-4 shrink-0 opacity-50' />
-				</Button>
+				</div>
 			</PopoverTrigger>
 			<PopoverContent className='w-full p-0' align='start'>
 				<Command>

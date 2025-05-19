@@ -2,6 +2,8 @@
 
 @plugin "tailwindcss-animate";
 
+@source not "../db.json5";
+
 @custom-variant dark (&:is(.dark *));
 
 body {
