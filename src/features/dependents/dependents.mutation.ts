@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { v4 as uuidv4 } from 'uuid';
 import { createDependentAsync, deleteDependentAsync } from './dependents.async';
 import type { TDependent } from '@/common/types';
 
@@ -7,7 +8,12 @@ export const useCreateDepedent = () => {
 
 	const mutationResult = useMutation({
 		mutationFn: async (dependent: TDependent) => {
-			return createDependentAsync(dependent);
+			// Generate a UUID for the dependent if not provided
+			const dependentWithId = {
+				...dependent,
+				id: dependent.id || uuidv4(),
+			};
+			return createDependentAsync(dependentWithId);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({

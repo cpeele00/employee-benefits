@@ -67,9 +67,6 @@ export const updateEmployeeAsync = async (employee: TEmployee) => {
 };
 
 export const deleteEmployeeAsync = async (id: string) => {
-	// simulate network latency
-	// await new Promise((resolve) => setTimeout(resolve, 1000));
-
 	const res = await fetch(`${API_URL}/employees/${id}`, {
 		method: 'DELETE',
 	});

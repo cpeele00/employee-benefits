@@ -12,7 +12,9 @@ import {
 	getAllDependentsByEmployeeIdAsync,
 } from '../dependents/dependents.async';
 
-export const useCreateEmployee = () => {
+export const useCreateEmployee = (options?: {
+	onSuccess?: (data: TEmployee, variables: TEmployee) => void;
+}) => {
 	const queryClient = useQueryClient();
 
 	const mutationResult = useMutation({
@@ -56,12 +58,22 @@ export const useCreateEmployee = () => {
 					queryClient.invalidateQueries({
 						queryKey: ['dependents', createdEmployee.id],
 					});
+
+					// Call the custom onSuccess if provided
+					if (options?.onSuccess) {
+						options.onSuccess(createdEmployee, originalEmployee);
+					}
 				});
 			} else {
 				// If no dependents, still invalidate the main query
 				queryClient.invalidateQueries({
 					queryKey: ['employeesWithDependents'],
 				});
+
+				// Call the custom onSuccess if provided
+				if (options?.onSuccess) {
+					options.onSuccess(createdEmployee, originalEmployee);
+				}
 			}
 		},
 	});

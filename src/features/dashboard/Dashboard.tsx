@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { TEmployee, TEmployeeDependent } from '@/common/types';
 import { Skeleton, TitleCard } from '@/common/components';
@@ -40,11 +40,15 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 	isDeletingEmployee = false,
 	onDeleteEmployee,
 }) => {
-	const [isAddEmployeeDrawerOpen, setIsAddEmployeeDrawerOpen] = React.useState(false);
+	const [isAddEmployeeDrawerOpen, setIsAddEmployeeDrawerOpen] = useState(false);
 
 	const handleCreateSuccess = () => {
 		// Close the drawer
 		setIsAddEmployeeDrawerOpen(false);
+	};
+
+	const handleCreateFailure = () => {
+		//setIsAddEmployeeDrawerOpen(true);
 	};
 
 	const handleUpdateSuccess = () => {
@@ -52,13 +56,16 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 		setIsAddEmployeeDrawerOpen(false);
 	};
 
+	const isPending = isRefetching || isDeletingEmployee || isUpdatingEmployee;
+
 	return (
 		<>
 			<TitleCard title='Dashboard' />
 			<div className='flex justify-between w-full mb-4 mt-10'>
-				{isRefetching ? <CircularProgress /> : <div></div>}
+				{isPending ? <CircularProgress /> : <div></div>}
 				<Button
 					className='flex items-center gap-1'
+					disabled={isPending || isLoading}
 					onClick={() => setIsAddEmployeeDrawerOpen(true)}
 				>
 					<Plus />
@@ -125,6 +132,7 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 										<Button
 											variant='ghost'
 											size='icon'
+											disabled={isPending}
 											onClick={() => {
 												setIsAddEmployeeDrawerOpen(true);
 											}}
@@ -136,6 +144,7 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 											variant='ghost'
 											size='icon'
 											type='button'
+											disabled={isPending}
 											onClick={(e) => {
 												e.preventDefault();
 												if (item.employee.id) {
@@ -162,10 +171,16 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 					onSave={(employee: TEmployee) => {
 						return onCreateEmployee(employee)
 							.then(() => {
-								setIsAddEmployeeDrawerOpen(false);
+								handleCreateSuccess();
 							})
 							.catch((err: unknown) => {
-								console.error(err);
+								if (err instanceof Error) {
+									console.error(err.message);
+								} else {
+									console.error(err);
+								}
+
+								handleCreateFailure();
 							});
 					}}
 					onClose={() => {

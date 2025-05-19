@@ -42,7 +42,7 @@ interface IAddDependentDrawerProps {
 	dependent?: TDependent;
 	isCreatingDependent: boolean;
 	onClose: () => void;
-	onSave: (dependent: TDependent) => void;
+	onSave: (dependent: TDependent) => Promise<void>;
 }
 
 const benefitOptions = benefitTypes.map((benefit: TBenefitType) => ({
@@ -80,7 +80,13 @@ export const AddDependentDrawer: React.FC<IAddDependentDrawerProps> = ({
 			benefits: data.benefits,
 		};
 
-		onSave(dependentToSave);
+		onSave(dependentToSave)
+			.then(() => {
+				form.reset();
+			})
+			.catch((err) => {
+				console.error('Failed to save dependent:', err);
+			});
 	};
 
 	const isEditing = !!dependent;
@@ -147,7 +153,7 @@ export const AddDependentDrawer: React.FC<IAddDependentDrawerProps> = ({
 										<Select
 											onValueChange={field.onChange}
 											defaultValue={field.value}
-											disabled={false}
+											disabled={isCreatingDependent}
 										>
 											<FormControl>
 												<SelectTrigger className='w-full'>
@@ -170,6 +176,7 @@ export const AddDependentDrawer: React.FC<IAddDependentDrawerProps> = ({
 							<FormField
 								control={form.control}
 								name={`benefits`}
+								disabled={isCreatingDependent}
 								render={({ field }) => (
 									<FormItem className='w-full'>
 										<FormLabel>Benefits</FormLabel>
@@ -193,6 +200,7 @@ export const AddDependentDrawer: React.FC<IAddDependentDrawerProps> = ({
 					<div className='flex justify-end gap-2'>
 						<Button
 							variant='outline'
+							disabled={isCreatingDependent}
 							onClick={() => {
 								form.reset();
 

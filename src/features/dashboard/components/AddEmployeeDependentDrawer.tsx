@@ -43,7 +43,6 @@ interface IAddEmployeeDependentDrawerProps {
 	isCreatingEmployee: boolean;
 	onClose: () => void;
 	onSave: (employee: TEmployee) => Promise<void>;
-	onSaveSuccess?: () => void;
 }
 
 const benefitOptions = benefitTypes.map((benefit: TBenefitType) => ({
@@ -57,7 +56,6 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 	isCreatingEmployee,
 	onClose,
 	onSave,
-	onSaveSuccess,
 }) => {
 	// Initialize the react-hook-form with zod validation
 	const form = useForm<TEmployeeFormValues>({
@@ -106,8 +104,8 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 		onSave(employeeToSave)
 			.then(() => {
 				form.reset();
-				if (onSaveSuccess) onSaveSuccess();
-				else onClose();
+				// if (onSaveSuccess) onSaveSuccess();
+				// else onClose();
 			})
 			.catch((err) => {
 				console.error('Failed to save employee:', err);
@@ -318,6 +316,7 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 													type='button'
 													variant='ghost'
 													size='sm'
+													disabled={isCreatingEmployee}
 													onClick={() =>
 														handleRemoveDependent(index)
 													}
@@ -339,6 +338,7 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 					<div className='flex justify-end gap-2'>
 						<Button
 							variant='outline'
+							disabled={isCreatingEmployee}
 							onClick={() => {
 								form.reset();
 

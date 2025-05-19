@@ -111,6 +111,7 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 					{isPending ? <CircularProgress /> : <div></div>}
 					<Button
 						className='flex items-center gap-1'
+						disabled={isPending || areDependentsLoading}
 						onClick={() => {
 							setIsAddDependentDrawerOpen(true);
 						}}
@@ -152,6 +153,7 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 											variant='ghost'
 											size='icon'
 											className='ml-auto'
+											disabled={isPending}
 										>
 											<Pencil className='h-4 w-4' />
 											<span className='sr-only'>Edit</span>
@@ -160,6 +162,7 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 											variant='ghost'
 											size='icon'
 											className='ml-auto'
+											disabled={isPending}
 											onClick={() => {
 												if (dependent.id) {
 													onDeleteDependent(dependent.id);
@@ -181,15 +184,21 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 				<AddDependentDrawer
 					isOpen={isAddDependentDrawerOpen && !!employee}
 					employeeId={employee?.id ?? ''}
-					isCreatingDependent={false}
+					isCreatingDependent={isCreatingDependent}
 					onClose={() => {
 						setIsAddDependentDrawerOpen(false);
 					}}
 					onSave={(dependent: TDependent) => {
-						onCreateDependent(dependent)
-							.then()
+						return onCreateDependent(dependent)
+							.then(() => {
+								handleCreateSuccess();
+							})
 							.catch((err: unknown) => {
-								console.error(err);
+								if (err instanceof Error) {
+									console.error(err.message);
+								} else {
+									console.error(err);
+								}
 							});
 					}}
 				/>,
