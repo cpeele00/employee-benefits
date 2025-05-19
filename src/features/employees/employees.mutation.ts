@@ -44,9 +44,11 @@ export const useCreateEmployee = () => {
 					queryClient.invalidateQueries({
 						queryKey: ['employeesWithDependents'],
 					});
+
 					queryClient.invalidateQueries({
 						queryKey: ['employees'],
 					});
+
 					queryClient.invalidateQueries({
 						queryKey: ['dependents'],
 					});

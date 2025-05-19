@@ -13,6 +13,7 @@ import {
 } from '@/common/components/FlexTable/FlexTable';
 import { Avatar, AvatarGroup } from '@/common/components';
 import { AddEmployeeDependentDrawer } from './components/AddEmployeeDependentDrawer';
+import { Pencil, Trash2 } from 'lucide-react';
 
 interface IDashboardProps {
 	employeesWithDependents: TEmployeeDependent[] | undefined;
@@ -60,8 +61,8 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 					{ id: 'employee' },
 					{ id: 'dependents' },
 					{ id: 'annualCost' },
-					{ id: 'perPaycheck', width: 'text-right' },
-					{ id: 'actions', width: 'w-24' },
+					{ id: 'perPaycheck' },
+					{ id: 'actions', width: 'text-right' },
 				]}
 			>
 				<FlexTableHeader>
@@ -72,7 +73,7 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 					<FlexTableHeaderCell column='annualCost'>
 						Annual Cost
 					</FlexTableHeaderCell>
-					<FlexTableHeaderCell column='perPaycheck' className='text-right'>
+					<FlexTableHeaderCell column='perPaycheck'>
 						Per Paycheck
 					</FlexTableHeaderCell>
 					<FlexTableHeaderCell column='actions'>Actions</FlexTableHeaderCell>
@@ -95,30 +96,34 @@ export const Dashboard: React.FC<IDashboardProps> = ({
 								</AvatarGroup>
 							</FlexTableCell>
 							<FlexTableCell column='annualCost'>$0</FlexTableCell>
-							<FlexTableCell column='perPaycheck' className='text-right'>
-								$0
-							</FlexTableCell>
+							<FlexTableCell column='perPaycheck'>$0</FlexTableCell>
 							<FlexTableCell column='actions'>
-								<Button
-									variant='outline'
-									onClick={() => {
-										setIsAddEmployeeDrawerOpen(true);
-									}}
-								>
-									Edit
-								</Button>
-								<Button
-									variant='outline'
-									type='button'
-									onClick={(e) => {
-										e.preventDefault();
-										if (item.employee.id) {
-											onDeleteEmployee(item.employee.id);
-										}
-									}}
-								>
-									Delete
-								</Button>
+								<div className='flex space-x-2'>
+									<Button
+										variant='ghost'
+										size='icon'
+										onClick={() => {
+											setIsAddEmployeeDrawerOpen(true);
+										}}
+									>
+										<Pencil className='h-4 w-4' />
+										<span className='sr-only'>Edit</span>
+									</Button>
+									<Button
+										variant='ghost'
+										size='icon'
+										type='button'
+										onClick={(e) => {
+											e.preventDefault();
+											if (item.employee.id) {
+												onDeleteEmployee(item.employee.id);
+											}
+										}}
+									>
+										<Trash2 className='h-4 w-4' />
+										<span className='sr-only'>Delete</span>
+									</Button>
+								</div>
 							</FlexTableCell>
 						</FlexTableRow>
 					))}
