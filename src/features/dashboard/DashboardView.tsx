@@ -41,10 +41,12 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 	onDeleteEmployee,
 }) => {
 	const [isAddEmployeeDrawerOpen, setIsAddEmployeeDrawerOpen] = useState(false);
+	const [selectedEmployee, setSelectedEmployee] = useState<TEmployee | null>(null);
 
 	const handleCreateSuccess = () => {
 		// Close the drawer
 		setIsAddEmployeeDrawerOpen(false);
+		setSelectedEmployee(null);
 	};
 
 	const handleCreateFailure = () => {
@@ -54,9 +56,11 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 	const handleUpdateSuccess = () => {
 		// Close the drawer
 		setIsAddEmployeeDrawerOpen(false);
+		setSelectedEmployee(null);
 	};
 
-	const isPending = isRefetching || isDeletingEmployee || isUpdatingEmployee;
+	const isPending =
+		isRefetching || isDeletingEmployee || isUpdatingEmployee || isCreatingEmployee;
 
 	return (
 		<>
@@ -134,6 +138,7 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 											size='icon'
 											disabled={isPending}
 											onClick={() => {
+												setSelectedEmployee(item.employee);
 												setIsAddEmployeeDrawerOpen(true);
 											}}
 										>
@@ -166,22 +171,34 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 			{createPortal(
 				<AddEmployeeDependentDrawer
 					isOpen={isAddEmployeeDrawerOpen}
-					employee={null}
-					isCreatingEmployee={isCreatingEmployee}
+					employee={selectedEmployee}
+					isPending={isPending}
 					onSave={(employee: TEmployee) => {
-						return onCreateEmployee(employee)
-							.then(() => {
-								handleCreateSuccess();
-							})
-							.catch((err: unknown) => {
-								if (err instanceof Error) {
-									console.error(err.message);
-								} else {
-									console.error(err);
-								}
-
-								handleCreateFailure();
-							});
+						if (employee.id) {
+							return onUpdateEmployee(employee)
+								.then(() => {
+									handleUpdateSuccess();
+								})
+								.catch((err: unknown) => {
+									if (err instanceof Error) {
+										console.error(err.message);
+									} else {
+										console.error(err);
+									}
+								});
+						} else {
+							return onCreateEmployee(employee)
+								.then(() => {
+									handleCreateSuccess();
+								})
+								.catch((err: unknown) => {
+									if (err instanceof Error) {
+										console.error(err.message);
+									} else {
+										console.error(err);
+									}
+								});
+						}
 					}}
 					onClose={() => {
 						setIsAddEmployeeDrawerOpen(false);

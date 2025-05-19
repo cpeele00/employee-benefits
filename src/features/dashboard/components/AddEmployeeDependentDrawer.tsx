@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shadcn/ui/button';
@@ -40,7 +40,7 @@ import {
 interface IAddEmployeeDependentDrawerProps {
 	isOpen: boolean;
 	employee: TEmployee | null;
-	isCreatingEmployee: boolean;
+	isPending: boolean;
 	onClose: () => void;
 	onSave: (employee: TEmployee) => Promise<void>;
 }
@@ -53,7 +53,7 @@ const benefitOptions = benefitTypes.map((benefit: TBenefitType) => ({
 export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerProps> = ({
 	isOpen,
 	employee,
-	isCreatingEmployee,
+	isPending,
 	onClose,
 	onSave,
 }) => {
@@ -61,14 +61,34 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 	const form = useForm<TEmployeeFormValues>({
 		resolver: zodResolver(employeeFormSchema),
 		defaultValues: {
-			id: employee?.id || '',
+			id: employee?.id,
 			firstName: employee?.firstName || '',
 			lastName: employee?.lastName || '',
 			benefits: employee?.benefits || [],
 			dependents: employee?.dependents || [],
 		},
-		disabled: isCreatingEmployee,
+		disabled: isPending,
 	});
+
+	useEffect(() => {
+		if (employee) {
+			form.reset({
+				id: employee.id,
+				firstName: employee.firstName || '',
+				lastName: employee.lastName || '',
+				benefits: employee.benefits || [],
+				dependents: employee.dependents || [],
+			});
+		} else {
+			form.reset({
+				id: '',
+				firstName: '',
+				lastName: '',
+				benefits: [],
+				dependents: [],
+			});
+		}
+	}, [employee, form]);
 
 	// Setup field array for dependents
 	const { fields, append, remove } = useFieldArray({
@@ -81,7 +101,7 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 		append({
 			firstName: '',
 			lastName: '',
-			relationship: 'Spouse',
+			relationship: 'spouse',
 			benefits: [],
 		});
 	};
@@ -104,8 +124,6 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 		onSave(employeeToSave)
 			.then(() => {
 				form.reset();
-				// if (onSaveSuccess) onSaveSuccess();
-				// else onClose();
 			})
 			.catch((err) => {
 				console.error('Failed to save employee:', err);
@@ -195,7 +213,7 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 										size={'sm'}
 										type='button'
 										onClick={handleAddDependent}
-										disabled={isCreatingEmployee}
+										disabled={isPending}
 										className='flex items-center gap-1'
 									>
 										<Plus />
@@ -274,10 +292,10 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 																	</SelectTrigger>
 																</FormControl>
 																<SelectContent>
-																	<SelectItem value='Spouse'>
+																	<SelectItem value='spouse'>
 																		Spouse
 																	</SelectItem>
-																	<SelectItem value='Child'>
+																	<SelectItem value='child'>
 																		Child
 																	</SelectItem>
 																</SelectContent>
@@ -316,7 +334,7 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 													type='button'
 													variant='ghost'
 													size='sm'
-													disabled={isCreatingEmployee}
+													disabled={isPending}
 													onClick={() =>
 														handleRemoveDependent(index)
 													}
@@ -338,7 +356,7 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 					<div className='flex justify-end gap-2'>
 						<Button
 							variant='outline'
-							disabled={isCreatingEmployee}
+							disabled={isPending}
 							onClick={() => {
 								form.reset();
 
@@ -350,12 +368,10 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 						<Button
 							type='submit'
 							onClick={form.handleSubmit(onSubmit)}
-							disabled={isCreatingEmployee}
+							disabled={isPending}
 						>
 							Save
-							{isCreatingEmployee ? (
-								<Loader2 className='animate-spin' />
-							) : null}
+							{isPending ? <Loader2 className='animate-spin' /> : null}
 						</Button>
 					</div>
 				</SheetFooter>
