@@ -1,14 +1,7 @@
 import * as React from 'react';
 import { BookOpen, Bot, Settings2, SquareTerminal } from 'lucide-react';
 import { NavMain } from '@/common/components/ShadCnBlocks/NavMain';
-import { NavUser } from '@/common/components/ShadCnBlocks/NavUser';
-import {
-	Sidebar,
-	SidebarContent,
-	SidebarFooter,
-	SidebarHeader,
-	SidebarRail,
-} from '@/shadcn/ui/sidebar';
+import { Sidebar, SidebarContent, SidebarHeader, SidebarRail } from '@/shadcn/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shadcn/ui/avatar';
 
 // This is sample data.
@@ -29,16 +22,6 @@ const data = {
 			title: 'Employees',
 			url: '/app/employees/',
 			icon: Bot,
-		},
-		{
-			title: 'Dependents',
-			url: '/app/dependents/',
-			icon: BookOpen,
-		},
-		{
-			title: 'Benefits',
-			url: '/app/benefits/',
-			icon: Settings2,
 		},
 	],
 };
@@ -62,9 +45,6 @@ export const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) =
 			<SidebarContent>
 				<NavMain items={data.navMain} />
 			</SidebarContent>
-			<SidebarFooter>
-				<NavUser user={data.user} />
-			</SidebarFooter>
 			<SidebarRail />
 		</Sidebar>
 	);

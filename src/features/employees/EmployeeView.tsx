@@ -23,9 +23,24 @@ import { CircularProgress } from '@/common/components/CircularProgress/CircularP
 interface IEmployeeViewProps {
 	employee: TEmployee | undefined;
 	dependents?: TDependent[];
+	isEmployeeLoading: boolean;
+	areDependentsLoading: boolean;
+	isRefetching: boolean;
+	isDeletingDependent: boolean;
+	onDeleteDependent: (id: string) => Promise<boolean>;
 }
 
-export const EmployeeView: React.FC<IEmployeeViewProps> = ({ employee, dependents }) => {
+export const EmployeeView: React.FC<IEmployeeViewProps> = ({
+	employee,
+	dependents,
+	isEmployeeLoading,
+	areDependentsLoading,
+	isRefetching,
+	isDeletingDependent,
+	onDeleteDependent,
+}) => {
+	const isPending = isRefetching || isDeletingDependent;
+
 	return (
 		<div>
 			<section className='flex justify-between items-center mb-4'>
@@ -74,7 +89,7 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({ employee, dependent
 
 			<section>
 				<div className='flex justify-between items-center w-full mb-2 mt-12'>
-					<CircularProgress />
+					{isPending ? <CircularProgress /> : <div></div>}
 					<Button className='flex items-center gap-1'>
 						<Plus />
 						Add Dependent
@@ -121,6 +136,11 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({ employee, dependent
 											variant='ghost'
 											size='icon'
 											className='ml-auto'
+											onClick={() => {
+												if (dependent.id) {
+													onDeleteDependent(dependent.id);
+												}
+											}}
 										>
 											<Trash2 className='h-4 w-4' />
 											<span className='sr-only'>Delete</span>

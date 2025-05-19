@@ -38,7 +38,6 @@ export const NavMain = ({
 						className='group/collapsible'
 					>
 						<SidebarMenuItem>
-							{/* <CollapsibleTrigger asChild> */}
 							<Link to={item.url}>
 								<SidebarMenuButton
 									tooltip={item.title}
@@ -48,7 +47,6 @@ export const NavMain = ({
 									<span>{item.title}</span>
 								</SidebarMenuButton>
 							</Link>
-							{/* </CollapsibleTrigger> */}
 						</SidebarMenuItem>
 					</Collapsible>
 				))}
