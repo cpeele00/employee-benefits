@@ -10,6 +10,7 @@ import {
 	createDependentAsync,
 	deleteDependentAsync,
 	getAllDependentsByEmployeeIdAsync,
+	updateDependentAsync,
 } from '../dependents/dependents.async';
 
 export const useCreateEmployee = (options?: {
@@ -87,12 +88,83 @@ export const useUpdateEmployee = () => {
 	const queryClient = useQueryClient();
 
 	const mutationResult = useMutation({
-		mutationFn: (employee: TEmployee) => {
-			return updateEmployeeAsync(employee);
+		mutationFn: async (employee: TEmployee) => {
+			// First, update the employee without dependents
+			const employeeToUpdate = {
+				...employee,
+				dependents: [], // Remove dependents as they'll be updated separately
+			};
+
+			// Update the employee
+			const updatedEmployee = await updateEmployeeAsync(employeeToUpdate);
+
+			// Get existing dependents for this employee
+			const existingDependents = await getAllDependentsByEmployeeIdAsync(
+				employee.id || ''
+			);
+
+			// Create a map of existing dependents by ID for quick lookup
+			const existingDependentsMap = new Map(
+				existingDependents.map((dep) => [dep.id, dep])
+			);
+
+			// Process each dependent in the updated employee
+			if (Array.isArray(employee.dependents) && employee.dependents.length > 0) {
+				const dependentPromises = employee.dependents.map((dependent) => {
+					// If dependent has an ID, it's an update
+					if (dependent.id && existingDependentsMap.has(dependent.id)) {
+						return updateDependentAsync({
+							...dependent,
+							employeeId: employee.id,
+						});
+					}
+					// Otherwise it's a new dependent
+					else {
+						return createDependentAsync({
+							...dependent,
+							id: dependent.id || uuidv4(),
+							employeeId: employee.id,
+						});
+					}
+				});
+
+				// Execute all dependent updates/creations in parallel
+				await Promise.all(dependentPromises);
+			}
+
+			// Find dependents that were removed (exist in DB but not in the updated employee)
+			const updatedDependentIds = new Set(
+				employee.dependents?.map((dep) => dep.id).filter(Boolean) || []
+			);
+
+			// Filter out dependents that were removed
+			const dependentsToDelete = existingDependents.filter(
+				(dep) => dep.id && !updatedDependentIds.has(dep.id)
+			);
+
+			// Delete removed dependents
+			if (dependentsToDelete.length > 0) {
+				// Delete all dependents in parallel
+				const deletePromises = dependentsToDelete.map((dependent) =>
+					dependent.id ? deleteDependentAsync(dependent.id) : Promise.resolve()
+				);
+
+				await Promise.all(deletePromises);
+			}
+
+			return updatedEmployee;
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: ['employeesWithDependents', 'employees'],
+				queryKey: ['employeesWithDependents'],
+			});
+
+			queryClient.invalidateQueries({
+				queryKey: ['employees'],
+			});
+
+			queryClient.invalidateQueries({
+				queryKey: ['dependents'],
 			});
 		},
 	});
