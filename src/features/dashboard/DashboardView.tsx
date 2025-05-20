@@ -19,6 +19,7 @@ import { Link } from '@tanstack/react-router';
 import type { TEmployeeDependentWithCosts } from './dashboard.types';
 import { DashboardViewSkeleton } from './components/DashboardViewSkeleton';
 import { toast } from 'sonner';
+import { Badge } from '@/shadcn/ui/badge';
 
 interface IDashboardProps {
 	employeesWithDependents: TEmployeeDependentWithCosts[] | undefined;
@@ -197,7 +198,18 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 										})}
 									</FlexTableCell>
 									<FlexTableCell column='actions'>
-										<div className='flex justify-end space-x-2'>
+										<div className='flex justify-end space-x-2 items-center'>
+											{item.employee.firstName
+												.toLocaleLowerCase()
+												.startsWith('a') && (
+												<Badge
+													variant='outline'
+													className='text-green-600 border-green-600 text-xs rounded-3xl h-6 bg-green-300'
+												>
+													10% Discount Applied
+												</Badge>
+											)}
+
 											<Button
 												variant='ghost'
 												size='icon'
