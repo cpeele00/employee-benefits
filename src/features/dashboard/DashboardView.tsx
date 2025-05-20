@@ -16,9 +16,10 @@ import { AddEmployeeDependentDrawer } from './components/AddEmployeeDependentDra
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { CircularProgress } from '@/common/components/CircularProgress/CircularProgress';
 import { Link } from '@tanstack/react-router';
+import type { TEmployeeDependentWithCosts } from './dashboard.types';
 
 interface IDashboardProps {
-	employeesWithDependents: TEmployeeDependent[] | undefined;
+	employeesWithDependents: TEmployeeDependentWithCosts[] | undefined;
 	isLoading: boolean;
 	isRefetching: boolean;
 	isCreatingEmployee: boolean;
@@ -129,8 +130,22 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 										))}
 									</AvatarGroup>
 								</FlexTableCell>
-								<FlexTableCell column='annualCost'>$0</FlexTableCell>
-								<FlexTableCell column='perPaycheck'>$0</FlexTableCell>
+								<FlexTableCell column='annualCost'>
+									{item?.annualCost.toLocaleString('en-US', {
+										style: 'currency',
+										currency: 'USD',
+										minimumFractionDigits: 2,
+										maximumFractionDigits: 2,
+									})}
+								</FlexTableCell>
+								<FlexTableCell column='perPaycheck'>
+									{item?.perPaycheck.toLocaleString('en-US', {
+										style: 'currency',
+										currency: 'USD',
+										minimumFractionDigits: 2,
+										maximumFractionDigits: 2,
+									})}
+								</FlexTableCell>
 								<FlexTableCell column='actions'>
 									<div className='flex justify-end space-x-2'>
 										<Button

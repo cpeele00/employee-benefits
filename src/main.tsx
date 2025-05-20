@@ -1,15 +1,12 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
-
 import * as TanStackQueryProvider from '../src/integrations/tanstack-query/root-provider.tsx';
-
-// Import the generated route tree
-import { routeTree } from './routeTree.gen';
-
-import './styles.css';
 import reportWebVitals from './reportWebVitals.ts';
 import { ThemeProvider } from './common/components/ThemeProvider.tsx';
+import { routeTree } from './routeTree.gen';
+import { ErrorBoundary as AppErrorBoundary } from './common/ErrorBoundaries/AppErrorBoundary';
+import './styles.css';
 
 // Create a new router instance
 const router = createRouter({
@@ -36,11 +33,13 @@ if (rootElement && !rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement);
 	root.render(
 		<StrictMode>
-			<TanStackQueryProvider.Provider>
-				<ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
-					<RouterProvider router={router} />
-				</ThemeProvider>
-			</TanStackQueryProvider.Provider>
+			<AppErrorBoundary>
+				<TanStackQueryProvider.Provider>
+					<ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
+						<RouterProvider router={router} />
+					</ThemeProvider>
+				</TanStackQueryProvider.Provider>
+			</AppErrorBoundary>
 		</StrictMode>
 	);
 }
