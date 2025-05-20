@@ -5,13 +5,14 @@ import { getAllDependentsAsync } from '../dependents/dependents.async';
 import type { TDependent } from '@/common/types';
 import type { TEmployee } from '@/common/types';
 import { mapEmployeesToDependents } from './dashboard.utils';
+import type { TEmployeeDependentWithCosts } from './dashboard.types';
 
 // Create a custom query result type that uses our custom data type
 type TEmployeeDependentsQueryResult = Omit<
 	UseQueryResult<TEmployeeDependent[], unknown>,
 	'data'
 > & {
-	employeesWithDependents: TEmployeeDependent[] | undefined;
+	employeesWithDependents: TEmployeeDependentWithCosts[] | undefined;
 };
 
 export const useGetAllEmployeesWithDependentsQuery =

@@ -23,6 +23,7 @@ import { createPortal } from 'react-dom';
 import { AddDependentDrawer } from '../dependents/components/AddDependentDrawer';
 import { EmployeeViewSkeleton } from './components/EmployeeViewSkeleton';
 import { Badge } from '@/shadcn/ui/badge';
+import { toast } from 'sonner';
 
 interface IEmployeeViewProps {
 	employee: TEmployee | null;
@@ -71,12 +72,22 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 		// Close the drawer
 		setIsAddDependentDrawerOpen(false);
 		setSelectedDependent(null);
+		toast.success('Dependent created successfully!');
 	};
 
 	const handleUpdateSuccess = () => {
 		// Close the drawer
 		setIsAddDependentDrawerOpen(false);
 		setSelectedDependent(null);
+		toast.success('Dependent updated successfully!');
+	};
+
+	const handleCreateFailure = () => {
+		toast.error('Failed to create dependent. Please try again.');
+	};
+
+	const handleUpdateFailure = () => {
+		toast.error('Failed to update dependent. Please try again.');
 	};
 
 	const employeeBenefitsCosts = {
@@ -290,8 +301,10 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 								.catch((err: unknown) => {
 									if (err instanceof Error) {
 										console.error(err.message);
+										handleUpdateFailure();
 									} else {
 										console.error(err);
+										handleUpdateFailure();
 									}
 								});
 						} else {
@@ -302,8 +315,10 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 								.catch((err: unknown) => {
 									if (err instanceof Error) {
 										console.error(err.message);
+										handleCreateFailure();
 									} else {
 										console.error(err);
+										handleCreateFailure();
 									}
 								});
 						}

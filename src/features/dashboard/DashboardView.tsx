@@ -17,6 +17,7 @@ import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { CircularProgress } from '@/common/components/CircularProgress/CircularProgress';
 import { Link } from '@tanstack/react-router';
 import type { TEmployeeDependentWithCosts } from './dashboard.types';
+import { toast } from 'sonner';
 
 interface IDashboardProps {
 	employeesWithDependents: TEmployeeDependentWithCosts[] | undefined;
@@ -48,16 +49,22 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 		// Close the drawer
 		setIsAddEmployeeDrawerOpen(false);
 		setSelectedEmployee(null);
-	};
-
-	const handleCreateFailure = () => {
-		//setIsAddEmployeeDrawerOpen(true);
+		toast.success('Employee updated successfully!');
 	};
 
 	const handleUpdateSuccess = () => {
 		// Close the drawer
 		setIsAddEmployeeDrawerOpen(false);
 		setSelectedEmployee(null);
+		toast.success('Employee updated successfully!');
+	};
+
+	const handleCreateFailure = () => {
+		toast.error('Failed to create employee. Please try again.');
+	};
+
+	const handleUpdateFailure = () => {
+		toast.error('Failed to update employee. Please try again.');
 	};
 
 	const isPending =
@@ -204,6 +211,7 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 								.catch((err: unknown) => {
 									if (err instanceof Error) {
 										console.error(err.message);
+										handleUpdateFailure();
 									} else {
 										console.error(err);
 									}
@@ -216,6 +224,7 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 								.catch((err: unknown) => {
 									if (err instanceof Error) {
 										console.error(err.message);
+										handleCreateFailure();
 									} else {
 										console.error(err);
 									}
