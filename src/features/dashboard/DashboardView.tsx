@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import type { TEmployee, TEmployeeDependent } from '@/common/types';
-import { BenefitsCard, SkeletonRow, TitleCard } from '@/common/components';
+import type { TEmployee } from '@/common/types';
+import { BenefitsCard, TitleCard } from '@/common/components';
 import { Button } from '@/shadcn/ui/button';
 import {
 	FlexTable,

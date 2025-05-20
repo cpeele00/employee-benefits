@@ -1,12 +1,10 @@
-import { createFileRoute, Outlet, useMatch, useMatches } from '@tanstack/react-router';
+import { createFileRoute, Outlet } from '@tanstack/react-router';
 import { AppSidebar } from '@/common/components/ShadCnBlocks';
 import {
 	Breadcrumb,
 	BreadcrumbItem,
 	BreadcrumbLink,
 	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
 } from '@/shadcn/ui/breadcrumb';
 import { Separator } from '@/shadcn/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/shadcn/ui/sidebar';
@@ -17,11 +15,11 @@ export const Route = createFileRoute('/_app')({
 });
 
 function RouteComponent() {
-	const matches = useMatches();
-	const pathname = matches[matches.length - 1]?.pathname;
-	const lastSegment = pathname?.split('/').filter(Boolean).pop() || '';
-	const currentPageName =
-		lastSegment === 'app' ? 'Dashboard' : lastSegment || 'Dashboard';
+	// const matches = useMatches();
+	// const pathname = matches[matches.length - 1]?.pathname;
+	// const lastSegment = pathname?.split('/').filter(Boolean).pop() || '';
+	// const currentPageName =
+	// 	lastSegment === 'app' ? 'Dashboard' : lastSegment || 'Dashboard';
 
 	return (
 		<SidebarProvider>

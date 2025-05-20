@@ -169,33 +169,16 @@ Run tests with:
 ```bash
 git clone https://github.com/your-username/employee-benefits.git
 cd employee-benefits
+```
 
+2. Install dependencies and run the project in one command!
+
+```bash
 # Run the whole thing (installs npm packages and starts the frontend and mock API)
 npm start
-
-# Or install dependencies and start the frontend and mock API separately
-npm install
-npm run dev:all
 ```
 
-2. Install dependencies:
-
-```bash
-npm install
-```
-
-3. Start the development server:
-
-```bash
-# Start both frontend and mock API
-npm run dev:all
-
-# Or start them separately
-npm run dev     # Frontend only
-npm run api     # Mock API only
-```
-
-4. Open your browser and navigate to:
+3. Open your browser and navigate to:
 
 ```
 http://localhost:3000
@@ -211,14 +194,6 @@ http://localhost:3001
 
 ```bash
 npm run build
-```
-
-### Linting and Formatting
-
-```bash
-npm run check   # Format and lint
-npm run lint    # Lint only
-npm run format  # Format only
 ```
 
 ## 🤝 Contributing

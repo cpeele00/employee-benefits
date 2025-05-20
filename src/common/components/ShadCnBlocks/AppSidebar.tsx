@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BookOpen, Bot, Settings2, SquareTerminal } from 'lucide-react';
+import { SquareTerminal } from 'lucide-react';
 import { NavMain } from '@/common/components/ShadCnBlocks/NavMain';
 import { Sidebar, SidebarContent, SidebarHeader, SidebarRail } from '@/shadcn/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shadcn/ui/avatar';
