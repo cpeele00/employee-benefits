@@ -6,7 +6,6 @@ export type TEmployee = {
 	firstName: string;
 	lastName: string;
 	benefits: TBenefitType[];
-	// dependents: TDependent[];
 };
 
 export type TDependent = {

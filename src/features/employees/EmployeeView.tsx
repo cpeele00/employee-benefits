@@ -22,6 +22,7 @@ import { CircularProgress } from '@/common/components/CircularProgress/CircularP
 import { createPortal } from 'react-dom';
 import { AddDependentDrawer } from '../dependents/components/AddDependentDrawer';
 import { EmployeeViewSkeleton } from './components/EmployeeViewSkeleton';
+import { Badge } from '@/shadcn/ui/badge';
 
 interface IEmployeeViewProps {
 	employee: TEmployee | null;
@@ -101,7 +102,7 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 								<h2 className='text-2xl font-bold'>
 									{employee?.firstName} {employee?.lastName}
 								</h2>
-								<span className='text-sm'>
+								<span className='text-sm text-muted-foreground'>
 									Employee ID: {employee?.id}
 								</span>
 							</div>
@@ -196,7 +197,15 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 														dependent.lastName
 													}
 												/>
-												{dependent.firstName} {dependent.lastName}
+												<div className='flex flex-col gap-0'>
+													<h3 className='text-md font-medium mb-0 capitalize'>
+														{dependent.firstName}{' '}
+														{dependent.lastName}
+													</h3>
+													<span className='text-sm text-muted-foreground capitalize'>
+														{dependent.relationship}
+													</span>
+												</div>
 											</div>
 										</FlexTableCell>
 										<FlexTableCell
@@ -209,7 +218,18 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 											column='actions'
 											className='text-right'
 										>
-											<div className='flex justify-end space-x-2'>
+											<div className='flex justify-end space-x-2 items-center'>
+												{dependent.firstName
+													.toLocaleLowerCase()
+													.startsWith('a') && (
+													<Badge
+														variant='outline'
+														className='text-green-600 border-green-600 text-xs rounded-3xl h-6 bg-green-300'
+													>
+														10% Discount Applied
+													</Badge>
+												)}
+
 												<Button
 													variant='ghost'
 													size='icon'
