@@ -79,7 +79,7 @@ This project uses a hybrid approach to code organization:
 ### Development Tools
 
 - 🧪 **Vitest**: Fast unit testing
-- 🧹 **ESLint & Prettier**: Code quality and formatting
+- 🧹 **Prettier**: Code quality and formatting
 - 🔄 **Concurrently**: Run multiple scripts simultaneously
 - 🧠 **JSON Server**: Mock API for development
 
@@ -169,6 +169,13 @@ Run tests with:
 ```bash
 git clone https://github.com/your-username/employee-benefits.git
 cd employee-benefits
+
+# Run the whole thing (installs npm packages and starts the frontend and mock API)
+npm start
+
+# Or install dependencies and start the frontend and mock API separately
+npm install
+npm run dev:all
 ```
 
 2. Install dependencies:
