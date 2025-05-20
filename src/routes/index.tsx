@@ -1,15 +1,14 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { Button } from '@/shadcn/ui/button';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/')({
 	component: App,
+	beforeLoad: () => {
+		// Redirect to the dashboard view
+		throw redirect({ to: '/app' });
+	},
 });
 
 function App() {
-	return (
-		<div className='text-center'>
-			<h1>Landing Page</h1>
-			<Button onClick={() => alert('Hello World')}>Hello World</Button>
-		</div>
-	);
+	// This won't be rendered due to the redirect
+	return null;
 }
