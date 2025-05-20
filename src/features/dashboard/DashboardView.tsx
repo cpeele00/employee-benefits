@@ -18,17 +18,21 @@ import { CircularProgress } from '@/common/components/CircularProgress/CircularP
 import { Link } from '@tanstack/react-router';
 import type { TEmployeeDependentWithCosts } from './dashboard.types';
 import { toast } from 'sonner';
+import type { ITotalBenefitsCost } from '@/common/services/benefits.service';
 
 interface IDashboardProps {
 	employeesWithDependents: TEmployeeDependentWithCosts[] | undefined;
 	isLoading: boolean;
 	isRefetching: boolean;
 	isCreatingEmployee: boolean;
-	onCreateEmployee: (employee: TEmployee) => Promise<TEmployee>;
-	isUpdatingEmployee: boolean;
-	onUpdateEmployee: (employee: TEmployee) => Promise<TEmployee>;
 	isDeletingEmployee: boolean;
+	isUpdatingEmployee: boolean;
+	onCreateEmployee: (employee: TEmployee) => Promise<TEmployee>;
+	onUpdateEmployee: (employee: TEmployee) => Promise<TEmployee>;
 	onDeleteEmployee: (id: string) => Promise<boolean>;
+	totalBenefitsCost: number;
+	totalDependents: number;
+	totalEmployees: number;
 }
 
 export const DashboardView: React.FC<IDashboardProps> = ({
@@ -36,11 +40,14 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 	isLoading = false,
 	isRefetching = false,
 	isCreatingEmployee = false,
-	onCreateEmployee,
-	isUpdatingEmployee = false,
-	onUpdateEmployee,
 	isDeletingEmployee = false,
+	isUpdatingEmployee = false,
+	onCreateEmployee,
+	onUpdateEmployee,
 	onDeleteEmployee,
+	totalBenefitsCost,
+	totalDependents,
+	totalEmployees,
 }) => {
 	const [isAddEmployeeDrawerOpen, setIsAddEmployeeDrawerOpen] = useState(false);
 	const [selectedEmployee, setSelectedEmployee] = useState<TEmployee | null>(null);
@@ -73,6 +80,19 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 	return (
 		<>
 			<TitleCard title='Dashboard' />
+
+			<div>Total Employees: {totalEmployees}</div>
+			<div>Total Dependents: {totalDependents}</div>
+			<div>
+				Total Benefits Cost:{' '}
+				{totalBenefitsCost.toLocaleString('en-US', {
+					style: 'currency',
+					currency: 'USD',
+					minimumFractionDigits: 2,
+					maximumFractionDigits: 2,
+				})}
+			</div>
+
 			<div className='flex justify-between w-full mb-4 mt-10'>
 				{isPending ? <CircularProgress /> : <div></div>}
 				<Button

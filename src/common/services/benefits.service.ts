@@ -1,4 +1,4 @@
-import type { TDependent, TEmployee } from '@/common/types';
+import type { TDependent, TEmployee, TEmployeeDependent } from '@/common/types';
 
 /**
  * Constants for benefits calculations
@@ -25,6 +25,19 @@ export interface ICalculateEmployeeBenefitsCost {
 }
 
 /**
+ * Interface for the result of total benefits cost calculation across all employees
+ */
+export interface ITotalBenefitsCost {
+	totalEmployees: number; // Total number of employees
+	totalDependents: number; // Total number of dependents
+	totalEmployeeCost: number; // Total annual cost for all employees' benefits
+	totalDependentsCost: number; // Total annual cost for all dependents' benefits
+	totalDiscountAmount: number; // Total discount amount across all employees and dependents
+	totalAnnualCost: number; // Grand total annual cost after all discounts
+	totalBenefitsCost: number; // Alias for totalAnnualCost for backward compatibility
+}
+
+/**
  * Type definition for the benefits service
  */
 export type TEmployeeBenefitsService = {
@@ -41,6 +54,15 @@ export type TEmployeeBenefitsService = {
 		employee: TEmployee | null;
 		dependents: TDependent[] | undefined;
 	}) => ICalculateEmployeeBenefitsCost;
+
+	/**
+	 * Calculates the total cost of benefits across all employees and dependents
+	 * @param employeesWithDependents - Array of employees with their dependents
+	 * @returns Total benefits costs across the organization
+	 */
+	calculateTotalEmployeeBenefitsCost: (
+		employeesWithDependents: TEmployeeDependent[]
+	) => ITotalBenefitsCost;
 };
 
 /**
@@ -111,6 +133,59 @@ export const benefitsService: TEmployeeBenefitsService = {
 			totalAnnualCost,
 			perPaycheckAmount,
 			netPayPerPaycheck: BASE_SALARY_PER_PAYCHECK - perPaycheckAmount,
+		};
+	},
+	calculateTotalEmployeeBenefitsCost: (
+		employeesWithDependents: TEmployeeDependent[]
+	): ITotalBenefitsCost => {
+		let totalEmployeeCost = 0;
+		let totalDependentsCost = 0;
+		let totalDiscountAmount = 0;
+		let totalDependents = 0;
+
+		// Calculate costs for each employee and their dependents
+		employeesWithDependents.forEach((item) => {
+			// Employee cost - flat rate regardless of benefits selected
+			const employeeBaseCost = EMPLOYEE_COST;
+			const employeeDiscount = item.employee.firstName
+				.toLocaleLowerCase()
+				.startsWith('a')
+				? employeeBaseCost * DISCOUNT_RATE
+				: 0;
+
+			totalEmployeeCost += employeeBaseCost;
+			totalDiscountAmount += employeeDiscount;
+
+			// Count and calculate costs for dependents
+			const dependentsCount = item?.dependents?.length || 0;
+			totalDependents += dependentsCount;
+
+			// Dependents cost - flat rate per dependent regardless of benefits selected
+			item?.dependents?.forEach((dependent) => {
+				const dependentBaseCost = DEPENDENT_COST;
+				const dependentDiscount = dependent.firstName
+					.toLocaleLowerCase()
+					.startsWith('a')
+					? dependentBaseCost * DISCOUNT_RATE
+					: 0;
+
+				totalDependentsCost += dependentBaseCost;
+				totalDiscountAmount += dependentDiscount;
+			});
+		});
+
+		// Calculate grand total
+		const totalAnnualCost =
+			totalEmployeeCost + totalDependentsCost - totalDiscountAmount;
+
+		return {
+			totalEmployees: employeesWithDependents.length,
+			totalDependents,
+			totalEmployeeCost,
+			totalDependentsCost,
+			totalDiscountAmount,
+			totalAnnualCost,
+			totalBenefitsCost: totalAnnualCost, // Added back as an alias for totalAnnualCost
 		};
 	},
 };

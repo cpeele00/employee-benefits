@@ -6,6 +6,7 @@ import {
 	useUpdateEmployee,
 } from '@/features/employees/employees.mutation';
 import { createFileRoute } from '@tanstack/react-router';
+import { benefitsService } from '@/common/services/benefits.service';
 
 export const Route = createFileRoute('/_app/app/')({
 	component: DashboardRoute,
@@ -21,6 +22,9 @@ function DashboardRoute() {
 
 	const { deleteEmployee, isPending: isDeletingEmployee } = useDeleteEmployee();
 
+	const { totalBenefitsCost, totalDependents, totalEmployees } =
+		benefitsService.calculateTotalEmployeeBenefitsCost(employeesWithDependents || []);
+
 	return (
 		<>
 			<DashboardView
@@ -33,6 +37,9 @@ function DashboardRoute() {
 				onUpdateEmployee={updateEmployee}
 				isDeletingEmployee={isDeletingEmployee}
 				onDeleteEmployee={deleteEmployee}
+				totalBenefitsCost={totalBenefitsCost}
+				totalDependents={totalDependents}
+				totalEmployees={totalEmployees}
 			/>
 		</>
 	);
