@@ -14,8 +14,8 @@ export const BenefitsCard: React.FC<IBenefitsCardProps> = ({
 	icon,
 }) => {
 	return (
-		<Card className='w-full gap-2'>
-			<CardHeader className='flex items-center justify-between mb-0'>
+		<Card className='w-full gap-2 bg-[var(--flex-table-row)] shadow-sm'>
+			<CardHeader className='flex items-center justify-between mb-0 '>
 				<CardTitle>{title}</CardTitle>
 				{icon}
 			</CardHeader>

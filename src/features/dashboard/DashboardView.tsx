@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { TEmployee, TEmployeeDependent } from '@/common/types';
-import { SkeletonRow, TitleCard } from '@/common/components';
+import { BenefitsCard, SkeletonRow, TitleCard } from '@/common/components';
 import { Button } from '@/shadcn/ui/button';
 import {
 	FlexTable,
@@ -13,12 +13,11 @@ import {
 } from '@/common/components/FlexTable/FlexTable';
 import { Avatar, AvatarGroup } from '@/common/components';
 import { AddEmployeeDependentDrawer } from './components/AddEmployeeDependentDrawer';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { HeartPulse, Plus, Pencil, Trash2, UsersRound } from 'lucide-react';
 import { CircularProgress } from '@/common/components/CircularProgress/CircularProgress';
 import { Link } from '@tanstack/react-router';
 import type { TEmployeeDependentWithCosts } from './dashboard.types';
 import { toast } from 'sonner';
-import type { ITotalBenefitsCost } from '@/common/services/benefits.service';
 
 interface IDashboardProps {
 	employeesWithDependents: TEmployeeDependentWithCosts[] | undefined;
@@ -81,19 +80,33 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 		<>
 			<TitleCard title='Dashboard' />
 
-			<div>Total Employees: {totalEmployees}</div>
-			<div>Total Dependents: {totalDependents}</div>
-			<div>
-				Total Benefits Cost:{' '}
-				{totalBenefitsCost.toLocaleString('en-US', {
-					style: 'currency',
-					currency: 'USD',
-					minimumFractionDigits: 2,
-					maximumFractionDigits: 2,
-				})}
-			</div>
+			<section className='flex gap-4 mt-10'>
+				<BenefitsCard
+					title='Total Employees'
+					text={totalEmployees}
+					subtext='employees'
+					icon={<UsersRound className='text-blue-500' size={30} />}
+				/>
+				<BenefitsCard
+					title='Total Dependents'
+					text={totalDependents}
+					subtext='family members'
+					icon={<UsersRound className='text-blue-500' size={30} />}
+				/>
+				<BenefitsCard
+					title='Total Benefits Cost'
+					text={totalBenefitsCost.toLocaleString('en-US', {
+						style: 'currency',
+						currency: 'USD',
+						minimumFractionDigits: 2,
+						maximumFractionDigits: 2,
+					})}
+					subtext='per year'
+					icon={<HeartPulse className='text-red-500' size={30} />}
+				/>
+			</section>
 
-			<div className='flex justify-between w-full mb-4 mt-10'>
+			<div className='flex justify-between w-full mb-4 mt-12'>
 				{isPending ? <CircularProgress /> : <div></div>}
 				<Button
 					className='flex items-center gap-1'
