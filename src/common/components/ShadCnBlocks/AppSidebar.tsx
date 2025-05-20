@@ -18,11 +18,11 @@ const data = {
 			icon: SquareTerminal,
 			isActive: true,
 		},
-		{
-			title: 'Employees',
-			url: '/app/employees/',
-			icon: Bot,
-		},
+		// {
+		// 	title: 'Employees',
+		// 	url: '/app/employees/',
+		// 	icon: Bot,
+		// },
 	],
 };
 

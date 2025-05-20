@@ -119,13 +119,22 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 						{employeesWithDependents.map((item) => (
 							<FlexTableRow key={item.employee.id}>
 								<FlexTableCell column='employee'>
-									<Link
-										to={`/app/employees/$employeeId`}
-										params={{ employeeId: item.employee.id || '' }}
-										className='font-medium text-cyan-600 hover:underline dark:text-cyan-500'
-									>
-										{item.employee.firstName} {item.employee.lastName}
-									</Link>
+									<div className='flex items-center gap-3'>
+										<Avatar
+											size='lg'
+											name={`${item.employee.firstName} ${item.employee.lastName}`}
+										/>
+										<Link
+											to={`/app/employees/$employeeId`}
+											params={{
+												employeeId: item.employee.id || '',
+											}}
+											className='font-medium text-cyan-600 hover:underline dark:text-cyan-500'
+										>
+											{item.employee.firstName}{' '}
+											{item.employee.lastName}
+										</Link>
+									</div>
 								</FlexTableCell>
 								<FlexTableCell column='dependents'>
 									<AvatarGroup max={3}>

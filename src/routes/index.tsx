@@ -9,6 +9,6 @@ export const Route = createFileRoute('/')({
 });
 
 function App() {
-	// This won't be rendered due to the redirect
+	// NOTE: I have plans for an awesome landing page here...time permitting.
 	return null;
 }
