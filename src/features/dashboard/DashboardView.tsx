@@ -28,6 +28,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/shadcn/ui/dialog';
+import { ZeroState } from '@/common/components/ZeroState/ZeroState';
 
 interface IDashboardProps {
 	employeesWithDependents: TEmployeeDependentWithCosts[] | undefined;
@@ -148,135 +149,153 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 							Add Employee
 						</Button>
 					</div>
-					<FlexTable
-						columns={[
-							{ id: 'employee', width: 'w-1/4' },
-							{ id: 'dependents', width: 'w-1/4' },
-							{ id: 'annualCost', width: 'w-1/6' },
-							{ id: 'perPaycheck', width: 'w-1/6' },
-							{ id: 'actions', width: 'w-1/6 text-right' },
-						]}
-					>
-						<FlexTableHeader>
-							<FlexTableHeaderCell column='employee'>
-								Employee
-							</FlexTableHeaderCell>
-							<FlexTableHeaderCell column='dependents'>
-								# Dependents
-							</FlexTableHeaderCell>
-							<FlexTableHeaderCell column='annualCost'>
-								Annual Cost
-							</FlexTableHeaderCell>
-							<FlexTableHeaderCell column='perPaycheck'>
-								Per Paycheck
-							</FlexTableHeaderCell>
-							<FlexTableHeaderCell column='actions'>
-								Actions
-							</FlexTableHeaderCell>
-						</FlexTableHeader>
 
-						<FlexTableBody>
-							{employeesWithDependents.map((item) => (
-								<FlexTableRow key={item.employee.id}>
-									<FlexTableCell column='employee'>
-										<div className='flex items-center gap-3'>
-											<Avatar
-												size='lg'
-												name={`${item.employee.firstName} ${item.employee.lastName}`}
-											/>
-											<Link
-												to={`/app/employees/$employeeId`}
-												params={{
-													employeeId: item.employee.id || '',
-												}}
-												className='font-medium text-cyan-600 hover:underline dark:text-cyan-500'
-											>
-												{item.employee.firstName}{' '}
-												{item.employee.lastName}
-											</Link>
-										</div>
-									</FlexTableCell>
-									<FlexTableCell column='dependents'>
-										<AvatarGroup max={3}>
-											{(item.dependents || []).map((dependent) => (
+					{employeesWithDependents.length === 0 ? (
+						<ZeroState
+							title='No Employees'
+							icon={<UsersRound size={48} className='text-blue-500' />}
+							description='There are no employees to display at this time.'
+							actionLabel='Add Employee'
+							onAction={() => setIsAddEmployeeDrawerOpen(true)}
+						/>
+					) : (
+						<FlexTable
+							columns={[
+								{ id: 'employee', width: 'w-1/4' },
+								{ id: 'dependents', width: 'w-1/4' },
+								{ id: 'annualCost', width: 'w-1/6' },
+								{ id: 'perPaycheck', width: 'w-1/6' },
+								{ id: 'actions', width: 'w-1/6 text-right' },
+							]}
+						>
+							<FlexTableHeader>
+								<FlexTableHeaderCell column='employee'>
+									Employee
+								</FlexTableHeaderCell>
+								<FlexTableHeaderCell column='dependents'>
+									# Dependents
+								</FlexTableHeaderCell>
+								<FlexTableHeaderCell column='annualCost'>
+									Annual Cost
+								</FlexTableHeaderCell>
+								<FlexTableHeaderCell column='perPaycheck'>
+									Per Paycheck
+								</FlexTableHeaderCell>
+								<FlexTableHeaderCell column='actions'>
+									Actions
+								</FlexTableHeaderCell>
+							</FlexTableHeader>
+
+							<FlexTableBody>
+								{employeesWithDependents.map((item) => (
+									<FlexTableRow key={item.employee.id}>
+										<FlexTableCell column='employee'>
+											<div className='flex items-center gap-3'>
 												<Avatar
-													key={dependent.id}
-													name={`${dependent.firstName} ${dependent.lastName}`}
+													size='lg'
+													name={`${item.employee.firstName} ${item.employee.lastName}`}
 												/>
-											))}
-										</AvatarGroup>
-									</FlexTableCell>
-									<FlexTableCell column='annualCost'>
-										{item?.annualCost.toLocaleString('en-US', {
-											style: 'currency',
-											currency: 'USD',
-											minimumFractionDigits: 2,
-											maximumFractionDigits: 2,
-										})}
-									</FlexTableCell>
-									<FlexTableCell column='perPaycheck'>
-										{item?.perPaycheck.toLocaleString('en-US', {
-											style: 'currency',
-											currency: 'USD',
-											minimumFractionDigits: 2,
-											maximumFractionDigits: 2,
-										})}
-									</FlexTableCell>
-									<FlexTableCell column='actions'>
-										<div className='flex justify-end space-x-2 items-center'>
-											{item.employee.firstName
-												.toLocaleLowerCase()
-												.startsWith('a') && (
-												<Badge
-													variant='outline'
-													className='text-green-600 border-green-600 text-xs rounded-3xl h-6 bg-green-300'
+												<Link
+													to={`/app/employees/$employeeId`}
+													params={{
+														employeeId:
+															item.employee.id || '',
+													}}
+													className='font-medium text-cyan-600 hover:underline dark:text-cyan-500'
 												>
-													10% Discount Applied
-												</Badge>
-											)}
+													{item.employee.firstName}{' '}
+													{item.employee.lastName}
+												</Link>
+											</div>
+										</FlexTableCell>
+										<FlexTableCell column='dependents'>
+											<AvatarGroup max={3}>
+												{(item.dependents || []).map(
+													(dependent) => (
+														<Avatar
+															key={dependent.id}
+															name={`${dependent.firstName} ${dependent.lastName}`}
+														/>
+													)
+												)}
+											</AvatarGroup>
+										</FlexTableCell>
+										<FlexTableCell column='annualCost'>
+											{item?.annualCost.toLocaleString('en-US', {
+												style: 'currency',
+												currency: 'USD',
+												minimumFractionDigits: 2,
+												maximumFractionDigits: 2,
+											})}
+										</FlexTableCell>
+										<FlexTableCell column='perPaycheck'>
+											{item?.perPaycheck.toLocaleString('en-US', {
+												style: 'currency',
+												currency: 'USD',
+												minimumFractionDigits: 2,
+												maximumFractionDigits: 2,
+											})}
+										</FlexTableCell>
+										<FlexTableCell column='actions'>
+											<div className='flex justify-end space-x-2 items-center'>
+												{item.employee.firstName
+													.toLocaleLowerCase()
+													.startsWith('a') && (
+													<Badge
+														variant='outline'
+														className='text-green-600 border-green-600 text-xs rounded-3xl h-6 bg-green-300'
+													>
+														10% Discount Applied
+													</Badge>
+												)}
 
-											<Button
-												variant='ghost'
-												size='icon'
-												disabled={isPending}
-												onClick={() => {
-													const employeeWithDependents = {
-														...item.employee,
-														dependents: item.dependents || [],
-													};
+												<Button
+													variant='ghost'
+													size='icon'
+													disabled={isPending}
+													onClick={() => {
+														const employeeWithDependents = {
+															...item.employee,
+															dependents:
+																item.dependents || [],
+														};
 
-													setSelectedEmployee(
-														employeeWithDependents
-													);
-													setIsAddEmployeeDrawerOpen(true);
-												}}
-											>
-												<Pencil className='h-4 w-4' />
-												<span className='sr-only'>Edit</span>
-											</Button>
-											<Button
-												variant='ghost'
-												size='icon'
-												type='button'
-												disabled={isPending}
-												onClick={(e) => {
-													e.preventDefault();
-													if (item.employee.id) {
-														setSelectedEmployeeToDelete(
-															item.employee
+														setSelectedEmployee(
+															employeeWithDependents
 														);
-													}
-												}}
-											>
-												<Trash2 className='h-4 w-4' />
-												<span className='sr-only'>Delete</span>
-											</Button>
-										</div>
-									</FlexTableCell>
-								</FlexTableRow>
-							))}
-						</FlexTableBody>
-					</FlexTable>
+														setIsAddEmployeeDrawerOpen(true);
+													}}
+												>
+													<Pencil className='h-4 w-4' />
+													<span className='sr-only'>Edit</span>
+												</Button>
+												<Button
+													variant='ghost'
+													size='icon'
+													type='button'
+													disabled={isPending}
+													onClick={(e) => {
+														e.preventDefault();
+														if (item.employee.id) {
+															setSelectedEmployeeToDelete(
+																item.employee
+															);
+														}
+													}}
+												>
+													<Trash2 className='h-4 w-4' />
+													<span className='sr-only'>
+														Delete
+													</span>
+												</Button>
+											</div>
+										</FlexTableCell>
+									</FlexTableRow>
+								))}
+							</FlexTableBody>
+						</FlexTable>
+					)}
+
 					<Dialog
 						open={isDeleteEmployeeDialogOpen}
 						onOpenChange={() => {

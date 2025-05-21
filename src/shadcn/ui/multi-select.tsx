@@ -35,7 +35,6 @@ export function MultiSelect({
 	};
 
 	const handleSelect = (value: string) => {
-		// Don't allow selecting the same item twice
 		if (selected.includes(value)) {
 			onChange(selected.filter((i) => i !== value));
 		} else {
@@ -46,7 +45,9 @@ export function MultiSelect({
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
-				<div
+				<button
+					type='button'
+					tabIndex={0}
 					className={cn(
 						buttonVariants({ variant: 'outline' }),
 						'w-full justify-between h-auto min-h-10 cursor-pointer'
@@ -91,10 +92,18 @@ export function MultiSelect({
 						)}
 					</div>
 					<ChevronsUpDown className='h-4 w-4 shrink-0 opacity-50' />
-				</div>
+				</button>
 			</PopoverTrigger>
-			<PopoverContent className='w-full p-0' align='start'>
-				<Command>
+			<PopoverContent
+				className='w-full p-0'
+				align='start'
+				onOpenAutoFocus={(e) => e.preventDefault()}
+			>
+				<Command
+					onKeyDown={(e) => {
+						if (e.key === 'Escape') e.stopPropagation();
+					}}
+				>
 					<CommandInput placeholder='Search...' />
 					<CommandList>
 						<CommandEmpty>{emptyMessage}</CommandEmpty>
