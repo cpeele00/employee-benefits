@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { TEmployee } from '@/common/types';
 import { BenefitsCard, TitleCard } from '@/common/components';
@@ -18,8 +18,16 @@ import { CircularProgress } from '@/common/components/CircularProgress/CircularP
 import { Link } from '@tanstack/react-router';
 import type { TEmployeeDependentWithCosts } from './dashboard.types';
 import { DashboardViewSkeleton } from './components/DashboardViewSkeleton';
-import { toast } from 'sonner';
 import { Badge } from '@/shadcn/ui/badge';
+import { toast } from 'sonner';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@/shadcn/ui/dialog';
 
 interface IDashboardProps {
 	employeesWithDependents: TEmployeeDependentWithCosts[] | undefined;
@@ -52,16 +60,26 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 }) => {
 	const [isAddEmployeeDrawerOpen, setIsAddEmployeeDrawerOpen] = useState(false);
 	const [selectedEmployee, setSelectedEmployee] = useState<TEmployee | null>(null);
+	const [isDeleteEmployeeDialogOpen, setIsDeleteEmployeeDialogOpen] = useState(false);
+
+	const isPending =
+		isRefetching || isDeletingEmployee || isUpdatingEmployee || isCreatingEmployee;
+
+	useEffect(() => {
+		// Open the dialog when an employee is selected.
+		// This ensures the value is set before opening the dialog.
+		if (selectedEmployee) {
+			setIsDeleteEmployeeDialogOpen(true);
+		}
+	}, [selectedEmployee]);
 
 	const handleCreateSuccess = () => {
-		// Close the drawer
 		setIsAddEmployeeDrawerOpen(false);
 		setSelectedEmployee(null);
 		toast.success('Employee updated successfully!');
 	};
 
 	const handleUpdateSuccess = () => {
-		// Close the drawer
 		setIsAddEmployeeDrawerOpen(false);
 		setSelectedEmployee(null);
 		toast.success('Employee updated successfully!');
@@ -74,9 +92,6 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 	const handleUpdateFailure = () => {
 		toast.error('Failed to update employee. Please try again.');
 	};
-
-	const isPending =
-		isRefetching || isDeletingEmployee || isUpdatingEmployee || isCreatingEmployee;
 
 	return (
 		<>
@@ -237,8 +252,8 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 												onClick={(e) => {
 													e.preventDefault();
 													if (item.employee.id) {
-														onDeleteEmployee(
-															item.employee.id
+														setSelectedEmployee(
+															item.employee
 														);
 													}
 												}}
@@ -252,6 +267,55 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 							))}
 						</FlexTableBody>
 					</FlexTable>
+					<Dialog
+						open={isDeleteEmployeeDialogOpen}
+						onOpenChange={() => {
+							setIsDeleteEmployeeDialogOpen(false);
+							setSelectedEmployee(null);
+						}}
+					>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle>
+									Delete {selectedEmployee?.firstName}{' '}
+									{selectedEmployee?.lastName}?
+								</DialogTitle>
+								<DialogDescription>
+									Are you sure you want to delete this dependent?
+								</DialogDescription>
+								<DialogDescription>
+									This action cannot be undone. This will permanently
+									delete the employee and all of their dependents.
+								</DialogDescription>
+							</DialogHeader>
+							<DialogFooter>
+								<div className='flex justify-end gap-2 mt-8'>
+									<Button
+										type='button'
+										variant='secondary'
+										onClick={() => {
+											setIsDeleteEmployeeDialogOpen(false);
+										}}
+									>
+										Cancel
+									</Button>
+									<Button
+										type='button'
+										variant='default'
+										onClick={() => {
+											if (selectedEmployee?.id) {
+												onDeleteEmployee(selectedEmployee.id);
+												setIsDeleteEmployeeDialogOpen(false);
+												setSelectedEmployee(null);
+											}
+										}}
+									>
+										Delete
+									</Button>
+								</div>
+							</DialogFooter>
+						</DialogContent>
+					</Dialog>
 				</>
 			)}
 

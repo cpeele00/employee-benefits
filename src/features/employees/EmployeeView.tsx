@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { TDependent, TEmployee } from '@/common/types';
 import { Avatar } from '@/common/components';
 import { Button } from '@/shadcn/ui/button';
@@ -24,6 +24,14 @@ import { AddDependentDrawer } from '../dependents/components/AddDependentDrawer'
 import { EmployeeViewSkeleton } from './components/EmployeeViewSkeleton';
 import { Badge } from '@/shadcn/ui/badge';
 import { toast } from 'sonner';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@/shadcn/ui/dialog';
 
 interface IEmployeeViewProps {
 	employee: TEmployee | null;
@@ -63,20 +71,29 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 	const [isAddDependentDrawerOpen, setIsAddDependentDrawerOpen] =
 		useState<boolean>(false);
 
+	const [isDeleteDependentDialogOpen, setIsDeleteDependentDialogOpen] =
+		useState<boolean>(false);
+
 	const [selectedDependent, setSelectedDependent] = useState<TDependent | null>(null);
 
 	const isPending =
 		isRefetching || isDeletingDependent || isUpdatingDependent || isCreatingDependent;
 
+	useEffect(() => {
+		// Open the dialog when a dependent is selected.
+		// This ensures the value is set before opening the dialog.
+		if (selectedDependent) {
+			setIsDeleteDependentDialogOpen(true);
+		}
+	}, [selectedDependent]);
+
 	const handleCreateSuccess = () => {
-		// Close the drawer
 		setIsAddDependentDrawerOpen(false);
 		setSelectedDependent(null);
 		toast.success('Dependent created successfully!');
 	};
 
 	const handleUpdateSuccess = () => {
-		// Close the drawer
 		setIsAddDependentDrawerOpen(false);
 		setSelectedDependent(null);
 		toast.success('Dependent updated successfully!');
@@ -261,8 +278,8 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 													disabled={isPending}
 													onClick={() => {
 														if (dependent.id) {
-															onDeleteDependent(
-																dependent.id
+															setSelectedDependent(
+																dependent
 															);
 														}
 													}}
@@ -279,6 +296,55 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 							</FlexTableBody>
 						</FlexTable>
 					</section>
+					<Dialog
+						open={isDeleteDependentDialogOpen}
+						onOpenChange={() => {
+							setSelectedDependent(null);
+							setIsDeleteDependentDialogOpen(false);
+						}}
+					>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle>
+									Delete {selectedDependent?.firstName}{' '}
+									{selectedDependent?.lastName}?
+								</DialogTitle>
+								<DialogDescription>
+									Are you sure you want to delete this dependent?
+								</DialogDescription>
+								<DialogDescription>
+									This action cannot be undone. This will permanently
+									delete the dependent.
+								</DialogDescription>
+							</DialogHeader>
+							<DialogFooter>
+								<div className='flex justify-end gap-2 mt-8'>
+									<Button
+										type='button'
+										variant='secondary'
+										onClick={() => {
+											setIsDeleteDependentDialogOpen(false);
+										}}
+									>
+										Cancel
+									</Button>
+									<Button
+										type='button'
+										variant='default'
+										onClick={() => {
+											if (selectedDependent?.id) {
+												onDeleteDependent(selectedDependent.id);
+												setIsDeleteDependentDialogOpen(false);
+												setSelectedDependent(null);
+											}
+										}}
+									>
+										Delete
+									</Button>
+								</div>
+							</DialogFooter>
+						</DialogContent>
+					</Dialog>
 				</>
 			)}
 
