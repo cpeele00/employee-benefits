@@ -15,12 +15,6 @@ export const Route = createFileRoute('/_app')({
 });
 
 function RouteComponent() {
-	// const matches = useMatches();
-	// const pathname = matches[matches.length - 1]?.pathname;
-	// const lastSegment = pathname?.split('/').filter(Boolean).pop() || '';
-	// const currentPageName =
-	// 	lastSegment === 'app' ? 'Dashboard' : lastSegment || 'Dashboard';
-
 	return (
 		<SidebarProvider>
 			<AppSidebar />
@@ -37,12 +31,6 @@ function RouteComponent() {
 											Employee Benefits Calculator
 										</BreadcrumbLink>
 									</BreadcrumbItem>
-									{/* <BreadcrumbSeparator className='hidden md:block' />
-									<BreadcrumbItem>
-										<BreadcrumbPage className='font-semibold capitalize'>
-											{currentPageName}
-										</BreadcrumbPage>
-									</BreadcrumbItem> */}
 								</BreadcrumbList>
 							</Breadcrumb>
 						</div>

@@ -8,10 +8,21 @@ import {
 import { createFileRoute } from '@tanstack/react-router';
 import { benefitsService } from '@/common/services/benefits.service';
 
+/* 
+ 	Set up the route for the dashboard view.
+*/
 export const Route = createFileRoute('/_app/app/')({
 	component: DashboardRoute,
 });
 
+/* NOTE: This is a container component.
+	 The React Container pattern is a way to keep your components clean and organized by separating concerns.
+	 It splits components into two types: containers, which handle the logic like fetching data, managing state, and routing,
+	 and presentational components, which just focus on displaying the UI.
+	 
+	 This allows us to decouple the UI from the data fetching, state management, and routing, 
+	 making it easier to test and maintain.
+*/
 function DashboardRoute() {
 	const { employeesWithDependents, isLoading, isRefetching } =
 		useGetAllEmployeesWithDependentsQuery();
