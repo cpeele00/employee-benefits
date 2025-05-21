@@ -2,15 +2,6 @@ import * as React from 'react';
 import { Check, ChevronsUpDown, X } from 'lucide-react';
 import { Badge } from '@/shadcn/ui/badge';
 import { buttonVariants } from '@/shadcn/ui/button';
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
-} from '@/shadcn/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/shadcn/ui/popover';
 import { cn } from '@/lib/utils';
 
 interface MultiSelectProps {
