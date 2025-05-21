@@ -3,9 +3,9 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "vite --port 3000",
 		"start": "npm install && npm run dev:all",
 		"api": "json-server --watch db.json5 --port 3001",
+		"dev": "vite --port 3000",
 		"dev:all": "concurrently \"npm run dev\" \"npm run api\"",
 		"build": "vite build && tsc",
 		"serve": "vite preview",
