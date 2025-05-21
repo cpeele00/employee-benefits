@@ -50,7 +50,7 @@ const benefitOptions = benefitTypes.map((benefit: TBenefitType) => ({
 	value: benefit,
 }));
 
-export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerProps> = ({
+const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerProps> = ({
 	isOpen,
 	employee,
 	isPending,
@@ -379,3 +379,5 @@ export const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerPro
 		</Sheet>
 	);
 };
+
+export default AddEmployeeDependentDrawer;

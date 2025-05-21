@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import type { TDependent, TEmployee } from '@/common/types';
 import { Avatar } from '@/common/components';
 import { Button } from '@/shadcn/ui/button';
@@ -20,7 +20,7 @@ import {
 } from '@/common/components/FlexTable/FlexTable';
 import { CircularProgress } from '@/common/components/CircularProgress/CircularProgress';
 import { createPortal } from 'react-dom';
-import { AddDependentDrawer } from '../dependents/components/AddDependentDrawer';
+// import { AddDependentDrawer } from '../dependents/components/AddDependentDrawer';
 import { EmployeeViewSkeleton } from './components/EmployeeViewSkeleton';
 import { Badge } from '@/shadcn/ui/badge';
 import { toast } from 'sonner';
@@ -50,6 +50,14 @@ interface IEmployeeViewProps {
 	onCreateDependent: (dependent: TDependent) => Promise<TDependent>;
 	onUpdateDependent: (dependent: TDependent) => Promise<TDependent>;
 }
+
+// Lazy load the AddDependentDrawer
+const AddDependentDrawer = lazy(
+	() =>
+		import(
+			/* @vite-chunk: "add-dependent-drawer" */ '../dependents/components/AddDependentDrawer'
+		)
+);
 
 export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 	employee,
@@ -349,47 +357,49 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 			)}
 
 			{createPortal(
-				<AddDependentDrawer
-					isOpen={isAddDependentDrawerOpen && !!employee}
-					employeeId={employee?.id ?? ''}
-					dependent={selectedDependent || null}
-					isPending={isPending}
-					onClose={() => {
-						setIsAddDependentDrawerOpen(false);
-						setSelectedDependent(null);
-					}}
-					onSave={(dependent: TDependent) => {
-						if (dependent.id) {
-							return onUpdateDependent(dependent)
-								.then(() => {
-									handleUpdateSuccess();
-								})
-								.catch((err: unknown) => {
-									if (err instanceof Error) {
-										console.error(err.message);
-										handleUpdateFailure();
-									} else {
-										console.error(err);
-										handleUpdateFailure();
-									}
-								});
-						} else {
-							return onCreateDependent(dependent)
-								.then(() => {
-									handleCreateSuccess();
-								})
-								.catch((err: unknown) => {
-									if (err instanceof Error) {
-										console.error(err.message);
-										handleCreateFailure();
-									} else {
-										console.error(err);
-										handleCreateFailure();
-									}
-								});
-						}
-					}}
-				/>,
+				<Suspense fallback={<div>Loading...</div>}>
+					<AddDependentDrawer
+						isOpen={isAddDependentDrawerOpen && !!employee}
+						employeeId={employee?.id ?? ''}
+						dependent={selectedDependent || null}
+						isPending={isPending}
+						onClose={() => {
+							setIsAddDependentDrawerOpen(false);
+							setSelectedDependent(null);
+						}}
+						onSave={(dependent: TDependent) => {
+							if (dependent.id) {
+								return onUpdateDependent(dependent)
+									.then(() => {
+										handleUpdateSuccess();
+									})
+									.catch((err: unknown) => {
+										if (err instanceof Error) {
+											console.error(err.message);
+											handleUpdateFailure();
+										} else {
+											console.error(err);
+											handleUpdateFailure();
+										}
+									});
+							} else {
+								return onCreateDependent(dependent)
+									.then(() => {
+										handleCreateSuccess();
+									})
+									.catch((err: unknown) => {
+										if (err instanceof Error) {
+											console.error(err.message);
+											handleCreateFailure();
+										} else {
+											console.error(err);
+											handleCreateFailure();
+										}
+									});
+							}
+						}}
+					/>
+				</Suspense>,
 				document.body
 			)}
 		</>
