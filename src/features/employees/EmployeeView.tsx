@@ -20,7 +20,6 @@ import {
 } from '@/common/components/FlexTable/FlexTable';
 import { CircularProgress } from '@/common/components/CircularProgress/CircularProgress';
 import { createPortal } from 'react-dom';
-// import { AddDependentDrawer } from '../dependents/components/AddDependentDrawer';
 import { EmployeeViewSkeleton } from './components/EmployeeViewSkeleton';
 import { Badge } from '@/shadcn/ui/badge';
 import { toast } from 'sonner';
@@ -32,6 +31,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/shadcn/ui/dialog';
+import { ZeroState } from '@/common/components/ZeroState/ZeroState';
 
 interface IEmployeeViewProps {
 	employee: TEmployee | null;
@@ -83,6 +83,8 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 		useState<boolean>(false);
 
 	const [selectedDependent, setSelectedDependent] = useState<TDependent | null>(null);
+	const [selectedDependentToDelete, setSelectedDependentToDelete] =
+		useState<TDependent | null>(null);
 
 	const isPending =
 		isRefetching || isDeletingDependent || isUpdatingDependent || isCreatingDependent;
@@ -90,10 +92,10 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 	useEffect(() => {
 		// Open the dialog when a dependent is selected.
 		// This ensures the value is set before opening the dialog.
-		if (selectedDependent) {
+		if (selectedDependentToDelete) {
 			setIsDeleteDependentDialogOpen(true);
 		}
-	}, [selectedDependent]);
+	}, [selectedDependentToDelete]);
 
 	const handleCreateSuccess = () => {
 		setIsAddDependentDrawerOpen(false);
@@ -213,101 +215,118 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 							</Button>
 						</div>
 
-						<FlexTable
-							columns={[
-								{ id: 'depdentName', width: 'w-full' },
-								{ id: 'cost', width: 'text-right' },
-								{ id: 'actions', width: 'text-right' },
-							]}
-						>
-							<FlexTableBody>
-								{dependents?.map((dependent) => (
-									<FlexTableRow key={dependent.id}>
-										<FlexTableCell column='depdentName'>
-											<div className='flex items-center gap-3'>
-												<Avatar
-													size='lg'
-													name={
-														dependent.firstName +
-														' ' +
-														dependent.lastName
-													}
-												/>
-												<div className='flex flex-col gap-0'>
-													<h3 className='text-md font-medium mb-0 capitalize'>
-														{dependent.firstName}{' '}
-														{dependent.lastName}
-													</h3>
-													<span className='text-sm text-muted-foreground capitalize'>
-														{dependent.relationship}
-													</span>
+						{dependents?.length === 0 ? (
+							<ZeroState
+								title='No Dependents'
+								description='This employee has no dependents.'
+								actionLabel='Add Dependent'
+								onAction={() => {
+									setIsAddDependentDrawerOpen(true);
+								}}
+							/>
+						) : (
+							<FlexTable
+								columns={[
+									{ id: 'depdentName', width: 'w-full' },
+									{ id: 'cost', width: 'text-right' },
+									{ id: 'actions', width: 'text-right' },
+								]}
+							>
+								<FlexTableBody>
+									{dependents?.map((dependent) => (
+										<FlexTableRow key={dependent.id}>
+											<FlexTableCell column='depdentName'>
+												<div className='flex items-center gap-3'>
+													<Avatar
+														size='lg'
+														name={
+															dependent.firstName +
+															' ' +
+															dependent.lastName
+														}
+													/>
+													<div className='flex flex-col gap-0'>
+														<h3 className='text-md font-medium mb-0 capitalize'>
+															{dependent.firstName}{' '}
+															{dependent.lastName}
+														</h3>
+														<span className='text-sm text-muted-foreground capitalize'>
+															{dependent.relationship}
+														</span>
+													</div>
 												</div>
-											</div>
-										</FlexTableCell>
-										<FlexTableCell
-											column='cost'
-											className='text-right'
-										>
-											{/* $0 */}
-										</FlexTableCell>
-										<FlexTableCell
-											column='actions'
-											className='text-right'
-										>
-											<div className='flex justify-end space-x-2 items-center'>
-												{dependent.firstName
-													.toLocaleLowerCase()
-													.startsWith('a') && (
-													<Badge
-														variant='outline'
-														className='text-green-600 border-green-600 text-xs rounded-3xl h-6 bg-green-300'
-													>
-														10% Discount Applied
-													</Badge>
-												)}
+											</FlexTableCell>
+											<FlexTableCell
+												column='cost'
+												className='text-right'
+											>
+												{/* $0 */}
+											</FlexTableCell>
+											<FlexTableCell
+												column='actions'
+												className='text-right'
+											>
+												<div className='flex justify-end space-x-2 items-center'>
+													{dependent.firstName
+														.toLocaleLowerCase()
+														.startsWith('a') && (
+														<Badge
+															variant='outline'
+															className='text-green-600 border-green-600 text-xs rounded-3xl h-6 bg-green-300'
+														>
+															10% Discount Applied
+														</Badge>
+													)}
 
-												<Button
-													variant='ghost'
-													size='icon'
-													className='ml-auto'
-													disabled={isPending}
-													onClick={() => {
-														setSelectedDependent(dependent);
-														setIsAddDependentDrawerOpen(true);
-													}}
-												>
-													<Pencil className='h-4 w-4' />
-													<span className='sr-only'>Edit</span>
-												</Button>
-												<Button
-													variant='ghost'
-													size='icon'
-													className='ml-auto'
-													disabled={isPending}
-													onClick={() => {
-														if (dependent.id) {
+													<Button
+														variant='ghost'
+														size='icon'
+														className='ml-auto'
+														disabled={isPending}
+														onClick={() => {
 															setSelectedDependent(
 																dependent
 															);
-														}
-													}}
-												>
-													<Trash2 className='h-4 w-4' />
-													<span className='sr-only'>
-														Delete
-													</span>
-												</Button>
-											</div>
-										</FlexTableCell>
-									</FlexTableRow>
-								))}
-							</FlexTableBody>
-						</FlexTable>
+															setIsAddDependentDrawerOpen(
+																true
+															);
+														}}
+													>
+														<Pencil className='h-4 w-4' />
+														<span className='sr-only'>
+															Edit
+														</span>
+													</Button>
+													<Button
+														variant='ghost'
+														size='icon'
+														className='ml-auto'
+														disabled={isPending}
+														onClick={() => {
+															if (dependent.id) {
+																setSelectedDependentToDelete(
+																	dependent
+																);
+															}
+														}}
+													>
+														<Trash2 className='h-4 w-4' />
+														<span className='sr-only'>
+															Delete
+														</span>
+													</Button>
+												</div>
+											</FlexTableCell>
+										</FlexTableRow>
+									))}
+								</FlexTableBody>
+							</FlexTable>
+						)}
 					</section>
 					<Dialog
 						open={isDeleteDependentDialogOpen}
 						onOpenChange={() => {
-							setSelectedDependent(null);
+							setSelectedDependentToDelete(null);
 							setIsDeleteDependentDialogOpen(false);
 						}}
 					>
@@ -343,7 +362,7 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 											if (selectedDependent?.id) {
 												onDeleteDependent(selectedDependent.id);
 												setIsDeleteDependentDialogOpen(false);
-												setSelectedDependent(null);
+												setSelectedDependentToDelete(null);
 											}
 										}}
 									>

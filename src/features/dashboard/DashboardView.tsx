@@ -68,6 +68,8 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 }) => {
 	const [isAddEmployeeDrawerOpen, setIsAddEmployeeDrawerOpen] = useState(false);
 	const [selectedEmployee, setSelectedEmployee] = useState<TEmployee | null>(null);
+	const [selectedEmployeeToDelete, setSelectedEmployeeToDelete] =
+		useState<TEmployee | null>(null);
 	const [isDeleteEmployeeDialogOpen, setIsDeleteEmployeeDialogOpen] = useState(false);
 
 	const isPending =
@@ -76,10 +78,10 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 	useEffect(() => {
 		// Open the dialog when an employee is selected.
 		// This ensures the value is set before opening the dialog.
-		if (selectedEmployee) {
+		if (selectedEmployeeToDelete) {
 			setIsDeleteEmployeeDialogOpen(true);
 		}
-	}, [selectedEmployee]);
+	}, [selectedEmployeeToDelete]);
 
 	const handleCreateSuccess = () => {
 		setIsAddEmployeeDrawerOpen(false);
@@ -260,7 +262,7 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 												onClick={(e) => {
 													e.preventDefault();
 													if (item.employee.id) {
-														setSelectedEmployee(
+														setSelectedEmployeeToDelete(
 															item.employee
 														);
 													}
@@ -279,7 +281,7 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 						open={isDeleteEmployeeDialogOpen}
 						onOpenChange={() => {
 							setIsDeleteEmployeeDialogOpen(false);
-							setSelectedEmployee(null);
+							setSelectedEmployeeToDelete(null);
 						}}
 					>
 						<DialogContent>
@@ -314,7 +316,7 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 											if (selectedEmployee?.id) {
 												onDeleteEmployee(selectedEmployee.id);
 												setIsDeleteEmployeeDialogOpen(false);
-												setSelectedEmployee(null);
+												setSelectedEmployeeToDelete(null);
 											}
 										}}
 									>
