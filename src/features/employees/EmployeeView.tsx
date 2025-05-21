@@ -220,6 +220,7 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 								title='No Dependents'
 								description='This employee has no dependents.'
 								actionLabel='Add Dependent'
+								icon={<UsersRound size={48} className='text-blue-500' />}
 								onAction={() => {
 									setIsAddDependentDrawerOpen(true);
 								}}
@@ -359,8 +360,10 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 										type='button'
 										variant='default'
 										onClick={() => {
-											if (selectedDependent?.id) {
-												onDeleteDependent(selectedDependent.id);
+											if (selectedDependentToDelete?.id) {
+												onDeleteDependent(
+													selectedDependentToDelete?.id
+												);
 												setIsDeleteDependentDialogOpen(false);
 												setSelectedDependentToDelete(null);
 											}

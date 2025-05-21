@@ -145,7 +145,7 @@ const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerProps> = (
 							: 'Fill out the form below to add a new employee.'}
 					</SheetDescription>
 				</SheetHeader>
-				<section className='p-4 overflow-y-auto'>
+				<section className='p-4 overflow-y-auto h-full'>
 					<Form {...form}>
 						<form
 							onSubmit={form.handleSubmit(onSubmit)}

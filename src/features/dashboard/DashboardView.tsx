@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import type { TEmployee } from '@/common/types';
+import type { TBenefitType, TEmployee } from '@/common/types';
 import { BenefitsCard, TitleCard } from '@/common/components';
 import { Button } from '@/shadcn/ui/button';
 import {
@@ -12,7 +12,6 @@ import {
 	FlexTableCell,
 } from '@/common/components/FlexTable/FlexTable';
 import { Avatar, AvatarGroup } from '@/common/components';
-// import { AddEmployeeDependentDrawer } from './components/AddEmployeeDependentDrawer';
 import { HeartPulse, Plus, Pencil, Trash2, UsersRound } from 'lucide-react';
 import { CircularProgress } from '@/common/components/CircularProgress/CircularProgress';
 import { Link } from '@tanstack/react-router';
@@ -20,6 +19,7 @@ import type { TEmployeeDependentWithCosts } from './dashboard.types';
 import { DashboardViewSkeleton } from './components/DashboardViewSkeleton';
 import { Badge } from '@/shadcn/ui/badge';
 import { toast } from 'sonner';
+import { benefitTypes } from '@/common/schemas/employee.schemas';
 import {
 	Dialog,
 	DialogContent,
@@ -29,6 +29,7 @@ import {
 	DialogTitle,
 } from '@/shadcn/ui/dialog';
 import { ZeroState } from '@/common/components/ZeroState/ZeroState';
+import { MultiSelect } from '@/shadcn/ui/multi-select';
 
 interface IDashboardProps {
 	employeesWithDependents: TEmployeeDependentWithCosts[] | undefined;
@@ -72,6 +73,7 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 	const [selectedEmployeeToDelete, setSelectedEmployeeToDelete] =
 		useState<TEmployee | null>(null);
 	const [isDeleteEmployeeDialogOpen, setIsDeleteEmployeeDialogOpen] = useState(false);
+	const [selectedBenefits, setSelectedBenefits] = useState<string[]>([]);
 
 	const isPending =
 		isRefetching || isDeletingEmployee || isUpdatingEmployee || isCreatingEmployee;
@@ -103,6 +105,11 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 	const handleUpdateFailure = () => {
 		toast.error('Failed to update employee. Please try again.');
 	};
+
+	const benefitOptions = benefitTypes.map((benefit: TBenefitType) => ({
+		label: benefit,
+		value: benefit,
+	}));
 
 	return (
 		<>
@@ -332,8 +339,10 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 										type='button'
 										variant='default'
 										onClick={() => {
-											if (selectedEmployee?.id) {
-												onDeleteEmployee(selectedEmployee.id);
+											if (selectedEmployeeToDelete?.id) {
+												onDeleteEmployee(
+													selectedEmployeeToDelete?.id
+												);
 												setIsDeleteEmployeeDialogOpen(false);
 												setSelectedEmployeeToDelete(null);
 											}
