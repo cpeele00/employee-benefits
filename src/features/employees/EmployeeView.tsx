@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import type { TDependent, TEmployee } from '@/common/types';
 import { Avatar } from '@/common/components';
 import { Button } from '@/shadcn/ui/button';
@@ -116,6 +116,68 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 	const handleUpdateFailure = () => {
 		toast.error('Failed to update dependent. Please try again.');
 	};
+
+	const handleDeleteSuccess = () => {
+		setIsDeleteDependentDialogOpen(false);
+		setSelectedDependentToDelete(null);
+		toast.success('Dependent deleted successfully!');
+	};
+
+	const handleDeleteFailure = () => {
+		toast.error('Failed to delete dependent. Please try again.');
+	};
+
+	const handleDeleteDependent = useCallback(() => {
+		if (selectedDependentToDelete?.id) {
+			onDeleteDependent(selectedDependentToDelete?.id)
+				.then(() => {
+					handleDeleteSuccess();
+				})
+				.catch((err: unknown) => {
+					if (err instanceof Error) {
+						console.error(err.message);
+						handleDeleteFailure();
+					} else {
+						handleDeleteFailure();
+					}
+				});
+		}
+	}, [onDeleteDependent, selectedDependentToDelete]);
+
+	const handleSaveDependent = useCallback(
+		(dependent: TDependent) => {
+			if (dependent.id) {
+				return onUpdateDependent(dependent)
+					.then(() => {
+						handleUpdateSuccess();
+					})
+					.catch((err: unknown) => {
+						if (err instanceof Error) {
+							console.error(err.message);
+							handleUpdateFailure();
+						} else {
+							console.error(err);
+							handleUpdateFailure();
+						}
+					});
+			} else {
+				return onCreateDependent(dependent)
+					.then(() => {
+						handleCreateSuccess();
+					})
+					.catch((err: unknown) => {
+						if (err instanceof Error) {
+							console.error(err.message);
+							handleCreateFailure();
+						} else {
+							console.error(err);
+							handleCreateFailure();
+						}
+					});
+			}
+		},
+		[onCreateDependent, onUpdateDependent]
+	);
 
 	const employeeBenefitsCosts = {
 		baseSalaryPerPaycheck: baseSalary,
@@ -334,8 +396,8 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 						<DialogContent>
 							<DialogHeader>
 								<DialogTitle>
-									Delete {selectedDependent?.firstName}{' '}
-									{selectedDependent?.lastName}?
+									Delete {selectedDependentToDelete?.firstName}{' '}
+									{selectedDependentToDelete?.lastName}?
 								</DialogTitle>
 								<DialogDescription>
 									Are you sure you want to delete this dependent?
@@ -359,15 +421,7 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 									<Button
 										type='button'
 										variant='default'
-										onClick={() => {
-											if (selectedDependentToDelete?.id) {
-												onDeleteDependent(
-													selectedDependentToDelete?.id
-												);
-												setIsDeleteDependentDialogOpen(false);
-												setSelectedDependentToDelete(null);
-											}
-										}}
+										onClick={handleDeleteDependent}
 									>
 										Delete
 									</Button>
@@ -389,37 +443,7 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 							setIsAddDependentDrawerOpen(false);
 							setSelectedDependent(null);
 						}}
-						onSave={(dependent: TDependent) => {
-							if (dependent.id) {
-								return onUpdateDependent(dependent)
-									.then(() => {
-										handleUpdateSuccess();
-									})
-									.catch((err: unknown) => {
-										if (err instanceof Error) {
-											console.error(err.message);
-											handleUpdateFailure();
-										} else {
-											console.error(err);
-											handleUpdateFailure();
-										}
-									});
-							} else {
-								return onCreateDependent(dependent)
-									.then(() => {
-										handleCreateSuccess();
-									})
-									.catch((err: unknown) => {
-										if (err instanceof Error) {
-											console.error(err.message);
-											handleCreateFailure();
-										} else {
-											console.error(err);
-											handleCreateFailure();
-										}
-									});
-							}
-						}}
+						onSave={(dependent: TDependent) => handleSaveDependent(dependent)}
 					/>
 				</Suspense>,
 				document.body

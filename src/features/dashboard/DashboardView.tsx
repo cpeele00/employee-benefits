@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { TEmployee } from '@/common/types';
 import { BenefitsCard, TitleCard } from '@/common/components';
@@ -86,7 +86,7 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 	const handleCreateSuccess = () => {
 		setIsAddEmployeeDrawerOpen(false);
 		setSelectedEmployee(null);
-		toast.success('Employee updated successfully!');
+		toast.success('Employee created successfully!');
 	};
 
 	const handleUpdateSuccess = () => {
@@ -102,6 +102,66 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 	const handleUpdateFailure = () => {
 		toast.error('Failed to update employee. Please try again.');
 	};
+
+	const handleDeleteSuccess = () => {
+		setIsDeleteEmployeeDialogOpen(false);
+		setSelectedEmployeeToDelete(null);
+		toast.success('Employee deleted successfully!');
+	};
+
+	const handleDeleteFailure = () => {
+		toast.error('Failed to delete employee. Please try again.');
+	};
+
+	const handleDeleteEmployee = useCallback(() => {
+		if (selectedEmployeeToDelete?.id) {
+			onDeleteEmployee(selectedEmployeeToDelete?.id)
+				.then(() => {
+					handleDeleteSuccess();
+				})
+				.catch((err: unknown) => {
+					if (err instanceof Error) {
+						console.error(err.message);
+						handleDeleteFailure();
+					} else {
+						handleDeleteFailure();
+					}
+				});
+		}
+	}, [onDeleteEmployee, selectedEmployeeToDelete]);
+
+	const handleSaveEmployee = useCallback(
+		(employee: TEmployee) => {
+			if (employee.id) {
+				return onUpdateEmployee(employee)
+					.then(() => {
+						handleUpdateSuccess();
+					})
+					.catch((err: unknown) => {
+						if (err instanceof Error) {
+							console.error(err.message);
+							handleUpdateFailure();
+						} else {
+							handleUpdateFailure();
+						}
+					});
+			} else {
+				return onCreateEmployee(employee)
+					.then(() => {
+						handleCreateSuccess();
+					})
+					.catch((err: unknown) => {
+						if (err instanceof Error) {
+							console.error(err.message);
+							handleCreateFailure();
+						} else {
+							handleCreateFailure();
+						}
+					});
+			}
+		},
+		[onCreateEmployee, onUpdateEmployee]
+	);
 
 	return (
 		<>
@@ -305,11 +365,11 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 						<DialogContent>
 							<DialogHeader>
 								<DialogTitle>
-									Delete {selectedEmployee?.firstName}{' '}
-									{selectedEmployee?.lastName}?
+									Delete {selectedEmployeeToDelete?.firstName}{' '}
+									{selectedEmployeeToDelete?.lastName}?
 								</DialogTitle>
 								<DialogDescription>
-									Are you sure you want to delete this dependent?
+									Are you sure you want to delete this employee?
 								</DialogDescription>
 								<DialogDescription>
 									This action cannot be undone. This will permanently
@@ -330,15 +390,7 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 									<Button
 										type='button'
 										variant='default'
-										onClick={() => {
-											if (selectedEmployeeToDelete?.id) {
-												onDeleteEmployee(
-													selectedEmployeeToDelete?.id
-												);
-												setIsDeleteEmployeeDialogOpen(false);
-												setSelectedEmployeeToDelete(null);
-											}
-										}}
+										onClick={handleDeleteEmployee}
 									>
 										Delete
 									</Button>
@@ -355,35 +407,7 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 						isOpen={isAddEmployeeDrawerOpen}
 						employee={selectedEmployee}
 						isPending={isPending}
-						onSave={(employee: TEmployee) => {
-							if (employee.id) {
-								return onUpdateEmployee(employee)
-									.then(() => {
-										handleUpdateSuccess();
-									})
-									.catch((err: unknown) => {
-										if (err instanceof Error) {
-											console.error(err.message);
-											handleUpdateFailure();
-										} else {
-											console.error(err);
-										}
-									});
-							} else {
-								return onCreateEmployee(employee)
-									.then(() => {
-										handleCreateSuccess();
-									})
-									.catch((err: unknown) => {
-										if (err instanceof Error) {
-											console.error(err.message);
-											handleCreateFailure();
-										} else {
-											console.error(err);
-										}
-									});
-							}
-						}}
+						onSave={(employee: TEmployee) => handleSaveEmployee(employee)}
 						onClose={() => {
 							setIsAddEmployeeDrawerOpen(false);
 						}}
