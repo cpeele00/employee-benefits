@@ -120,6 +120,7 @@ export const EmployeeView: React.FC<IEmployeeViewProps> = ({
 	const handleDeleteSuccess = () => {
 		setIsDeleteDependentDialogOpen(false);
 		setSelectedDependentToDelete(null);
+		setSelectedDependent(null);
 		toast.success('Dependent deleted successfully!');
 	};
 

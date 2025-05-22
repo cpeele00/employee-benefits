@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shadcn/ui/button';
@@ -94,9 +94,9 @@ const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerProps> = (
 				dependents: [],
 			});
 		}
-	}, [employee]);
+	}, [employee, form]);
 
-	const handleAddDependent = () => {
+	const handleAddDependent = useCallback(() => {
 		// Add a new dependent to the field array
 		append({
 			firstName: '',
@@ -104,31 +104,37 @@ const AddEmployeeDependentDrawer: React.FC<IAddEmployeeDependentDrawerProps> = (
 			relationship: 'spouse',
 			benefits: [],
 		});
-	};
+	}, [append]);
 
-	const handleRemoveDependent = (index: number) => {
-		// Remove the last dependent from the field array
-		remove(index);
-	};
+	const handleRemoveDependent = useCallback(
+		(index: number) => {
+			// Remove the last dependent from the field array
+			remove(index);
+		},
+		[remove]
+	);
 
 	// Handle form submission
-	const onSubmit = (data: TEmployeeFormValues) => {
-		const employeeToSave: TEmployee = {
-			id: data.id || '',
-			firstName: data.firstName,
-			lastName: data.lastName,
-			benefits: data.benefits,
-			dependents: data.dependents,
-		};
+	const onSubmit = useCallback(
+		(data: TEmployeeFormValues) => {
+			const employeeToSave: TEmployee = {
+				id: data.id || '',
+				firstName: data.firstName,
+				lastName: data.lastName,
+				benefits: data.benefits,
+				dependents: data.dependents,
+			};
 
-		onSave(employeeToSave)
-			.then(() => {
-				form.reset();
-			})
-			.catch((err) => {
-				console.error('Failed to save employee:', err);
-			});
-	};
+			onSave(employeeToSave)
+				.then(() => {
+					form.reset();
+				})
+				.catch((err) => {
+					console.error('Failed to save employee:', err);
+				});
+		},
+		[form, onSave]
+	);
 
 	const isEditing = !!employee;
 

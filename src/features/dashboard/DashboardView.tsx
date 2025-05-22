@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useEffect, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import type { TEmployee } from '@/common/types';
 import { BenefitsCard, TitleCard } from '@/common/components';
@@ -66,6 +66,23 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 	totalDependents,
 	totalEmployees,
 }) => {
+	// This is important to memoize the icons so that they are not recreated on every render.
+	// This is because the icons are passed down to the BenefitsCard component,
+	// which is a memoized component. If the icons are recreated on every render,
+	// the memoization will not work and the BenefitsCard component will be recreated on every render.
+	const employeesIcon = useMemo(
+		() => <UsersRound className='text-blue-500' size={30} />,
+		[]
+	);
+	const dependentsIcon = useMemo(
+		() => <UsersRound className='text-blue-500' size={30} />,
+		[]
+	);
+	const benefitsIcon = useMemo(
+		() => <HeartPulse className='text-red-500' size={30} />,
+		[]
+	);
+
 	const [isAddEmployeeDrawerOpen, setIsAddEmployeeDrawerOpen] = useState(false);
 	const [selectedEmployee, setSelectedEmployee] = useState<TEmployee | null>(null);
 	const [selectedEmployeeToDelete, setSelectedEmployeeToDelete] =
@@ -105,6 +122,7 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 
 	const handleDeleteSuccess = () => {
 		setIsDeleteEmployeeDialogOpen(false);
+		setSelectedEmployee(null);
 		setSelectedEmployeeToDelete(null);
 		toast.success('Employee deleted successfully!');
 	};
@@ -176,13 +194,13 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 							title='Total Employees'
 							text={totalEmployees}
 							subtext='employees'
-							icon={<UsersRound className='text-blue-500' size={30} />}
+							icon={employeesIcon}
 						/>
 						<BenefitsCard
 							title='Total Dependents'
 							text={totalDependents}
 							subtext='family members'
-							icon={<UsersRound className='text-blue-500' size={30} />}
+							icon={dependentsIcon}
 						/>
 						<BenefitsCard
 							title='Total Benefits Cost'
@@ -193,7 +211,7 @@ export const DashboardView: React.FC<IDashboardProps> = ({
 								maximumFractionDigits: 2,
 							})}
 							subtext='per year'
-							icon={<HeartPulse className='text-red-500' size={30} />}
+							icon={benefitsIcon}
 						/>
 					</section>
 

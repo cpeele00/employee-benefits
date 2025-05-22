@@ -1,3 +1,4 @@
+import React, { memo } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/shadcn/ui/card';
 
 interface IBenefitsCardProps {
@@ -7,7 +8,7 @@ interface IBenefitsCardProps {
 	icon: React.ReactNode;
 }
 
-export const BenefitsCard: React.FC<IBenefitsCardProps> = ({
+const BenefitsCardComponent: React.FC<IBenefitsCardProps> = ({
 	title,
 	text,
 	subtext,
@@ -26,3 +27,7 @@ export const BenefitsCard: React.FC<IBenefitsCardProps> = ({
 		</Card>
 	);
 };
+
+const BenefitsCard = memo(BenefitsCardComponent);
+
+export { BenefitsCard };

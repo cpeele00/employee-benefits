@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shadcn/ui/button';
@@ -91,24 +91,27 @@ const AddDependentDrawer: React.FC<IAddDependentDrawerProps> = ({
 		}
 	}, [dependent, form]);
 
-	const onSubmit = (data: TDependentFormValues) => {
-		const dependentToSave: TDependent = {
-			id: data.id,
-			employeeId,
-			firstName: data.firstName,
-			lastName: data.lastName,
-			relationship: data.relationship,
-			benefits: data.benefits,
-		};
+	const onSubmit = useCallback(
+		(data: TDependentFormValues) => {
+			const dependentToSave: TDependent = {
+				id: data.id,
+				employeeId,
+				firstName: data.firstName,
+				lastName: data.lastName,
+				relationship: data.relationship,
+				benefits: data.benefits,
+			};
 
-		onSave(dependentToSave)
-			.then(() => {
-				form.reset();
-			})
-			.catch((err) => {
-				console.error('Failed to save dependent:', err);
-			});
-	};
+			onSave(dependentToSave)
+				.then(() => {
+					form.reset();
+				})
+				.catch((err) => {
+					console.error('Failed to save dependent:', err);
+				});
+		},
+		[employeeId, form, onSave]
+	);
 
 	const isEditing = !!dependent;
 
