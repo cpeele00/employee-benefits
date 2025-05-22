@@ -174,7 +174,10 @@ cd employee-benefits
 2. Install dependencies and run the project in one command!
 
 ```bash
-# Run the whole thing (installs npm packages and starts the frontend and mock API)
+# "npm start" Runs the whole thing (installs npm packages and starts the frontend and mock API).
+# NOTE: It will boot up the json-server for the api and as well as the Vite Dev Server for the frontend.
+# Give it a minute to load up until you see Vite show that it's ready at http://localhost:3000
+
 npm start
 ```
 
